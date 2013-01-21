@@ -1,0 +1,385 @@
+input: time?
+input: time?
+input: system time
+1199655937296: input: time?
+1199655939593: guess: System.currentTimeMillis()
+1199655939609: guess: u.getTime()
+1199655939640: guess: u.printProgress_loopStartTime
+1199655941765: chosen: System.currentTimeMillis()
+1200191989453: input: new Pr
+1200191991828: input: new Pr
+1200194155015: input: new Ex
+1200200978500: input: new Pair
+1200268266890: input: new CacheEnt
+1200283827984: input: new P
+1200283829593: guess: new Pair<IProject,String>(p, s)
+1200283829609: guess: new LinkedBlockingQueue<Pair<IProject,String>>().poll(p.getLocalTimeStamp(), TimeUnit.MILLISECONDS)
+1200283829625: guess: logQueue.poll(p.getLocalTimeStamp(), TimeUnit.valueOf(new String()))
+1200283834609: chosen: new Pair<IProject,String>(p, s)
+1200515336687: input: new 
+1200515351437: input: new 
+1200682353640: version: 0.0.7
+1200682353640: input: out time
+1200682354687: desired type: null
+1200682354828: stats: w:31 l:8 f:6050 t1110
+1200682354828: guess: wait(UU.getTime(), Rectangle2D.OUT_LEFT)
+1200682354828: guess: wait(UU.getTime(), Rectangle2D.OUT_TOP)
+1200682354828: guess: wait(UU.getTime(), Rectangle2D.OUT_RIGHT)
+1200682363890: version: 0.0.7
+1200682363890: input: out time print
+1200682364015: desired type: null
+1200682364203: stats: w:122 l:75 f:6050 t1110
+1200682364203: guess: System.out.print(System.nanoTime())
+1200682364203: guess: System.out.print(UU.getTime())
+1200682364203: guess: System.out.print(System.currentTimeMillis())
+1200682371125: chosen: System.out.print(System.currentTimeMillis())
+1200682376984: version: 0.0.7
+1200682376984: input: print out time
+1200682377078: desired type: null
+1200682377203: stats: w:122 l:75 f:6050 t1110
+1200682377203: guess: System.out.print(System.nanoTime())
+1200682377203: guess: System.out.print(UU.getTime())
+1200682377203: guess: System.out.print(System.currentTimeMillis())
+1200682380500: chosen: System.out.print(System.currentTimeMillis())
+1202805733578: ERROR IN ModelCache.java(outter loop at top):
+java.lang.NullPointerException
+	at quack.ModelCache$1.resourceChanged(ModelCache.java:32)
+	at org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:282)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:276)
+	at org.eclipse.core.internal.events.NotificationManager.handleEvent(NotificationManager.java:248)
+	at org.eclipse.core.internal.resources.Workspace.broadcastEvent(Workspace.java:305)
+	at org.eclipse.core.internal.resources.Project.close(Project.java:138)
+	at org.eclipse.ui.actions.CloseResourceAction.invokeOperation(CloseResourceAction.java:184)
+	at org.eclipse.ui.actions.WorkspaceAction.execute(WorkspaceAction.java:141)
+	at org.eclipse.ui.actions.WorkspaceAction$1.runInWorkspace(WorkspaceAction.java:460)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:38)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+1202805737515: ERROR IN ModelCache.java(outter loop at top):
+java.lang.NullPointerException
+	at quack.ModelCache$1.resourceChanged(ModelCache.java:32)
+	at org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:282)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:276)
+	at org.eclipse.core.internal.events.NotificationManager.handleEvent(NotificationManager.java:248)
+	at org.eclipse.core.internal.resources.Workspace.broadcastEvent(Workspace.java:305)
+	at org.eclipse.core.internal.resources.Project.close(Project.java:138)
+	at org.eclipse.ui.actions.CloseResourceAction.invokeOperation(CloseResourceAction.java:184)
+	at org.eclipse.ui.actions.WorkspaceAction.execute(WorkspaceAction.java:141)
+	at org.eclipse.ui.actions.WorkspaceAction$1.runInWorkspace(WorkspaceAction.java:460)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:38)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+1203040599859: version: 0.0.8
+1203040599859: input: exit 0
+1203040600703: ERROR IN Main.java(at end):
+java.lang.NullPointerException
+	at quack.EclipseUtil$2MyASTVisitor.visit(EclipseUtil.java:181)
+	at org.eclipse.jdt.core.dom.MethodInvocation.accept0(MethodInvocation.java:236)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2523)
+	at org.eclipse.jdt.core.dom.VariableDeclarationFragment.accept0(VariableDeclarationFragment.java:224)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2546)
+	at org.eclipse.jdt.core.dom.VariableDeclarationStatement.accept0(VariableDeclarationStatement.java:272)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2546)
+	at org.eclipse.jdt.core.dom.Block.accept0(Block.java:135)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2523)
+	at org.eclipse.jdt.core.dom.IfStatement.accept0(IfStatement.java:189)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2546)
+	at org.eclipse.jdt.core.dom.Block.accept0(Block.java:135)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2523)
+	at org.eclipse.jdt.core.dom.TryStatement.accept0(TryStatement.java:194)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2546)
+	at org.eclipse.jdt.core.dom.Block.accept0(Block.java:135)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChild(ASTNode.java:2523)
+	at org.eclipse.jdt.core.dom.MethodDeclaration.accept0(MethodDeclaration.java:501)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2546)
+	at org.eclipse.jdt.core.dom.TypeDeclaration.accept0(TypeDeclaration.java:483)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at org.eclipse.jdt.core.dom.ASTNode.acceptChildren(ASTNode.java:2546)
+	at org.eclipse.jdt.core.dom.CompilationUnit.accept0(CompilationUnit.java:213)
+	at org.eclipse.jdt.core.dom.ASTNode.accept(ASTNode.java:2476)
+	at quack.EclipseUtil.countCallsToDifferentMethodsAndFields(EclipseUtil.java:186)
+	at quack.Main.getProposals(Main.java:167)
+	at quack.MyJavaCompletionProposalComputer.computeCompletionProposals(MyJavaCompletionProposalComputer.java:26)
+	at org.eclipse.jdt.internal.ui.text.java.CompletionProposalComputerDescriptor.computeCompletionProposals(CompletionProposalComputerDescriptor.java:303)
+	at org.eclipse.jdt.internal.ui.text.java.CompletionProposalCategory.computeCompletionProposals(CompletionProposalCategory.java:264)
+	at org.eclipse.jdt.internal.ui.text.java.ContentAssistProcessor.collectProposals(ContentAssistProcessor.java:251)
+	at org.eclipse.jdt.internal.ui.text.java.ContentAssistProcessor.computeCompletionProposals(ContentAssistProcessor.java:220)
+	at org.eclipse.jface.text.contentassist.ContentAssistant.computeCompletionProposals(ContentAssistant.java:1759)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup.computeProposals(CompletionProposalPopup.java:478)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup.access$16(CompletionProposalPopup.java:475)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup$2.run(CompletionProposalPopup.java:410)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup.showProposals(CompletionProposalPopup.java:404)
+	at org.eclipse.jface.text.contentassist.ContentAssistant.showPossibleCompletions(ContentAssistant.java:1588)
+	at org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor$AdaptedSourceViewer.doOperation(CompilationUnitEditor.java:176)
+	at org.eclipse.ui.texteditor.ContentAssistAction$1.run(ContentAssistAction.java:82)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.ui.texteditor.ContentAssistAction.run(ContentAssistAction.java:80)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:498)
+	at org.eclipse.ui.commands.ActionHandler.execute(ActionHandler.java:185)
+	at org.eclipse.ui.internal.handlers.LegacyHandlerWrapper.execute(LegacyHandlerWrapper.java:109)
+	at org.eclipse.core.commands.Command.executeWithChecks(Command.java:475)
+	at org.eclipse.core.commands.ParameterizedCommand.executeWithChecks(ParameterizedCommand.java:429)
+	at org.eclipse.ui.internal.handlers.HandlerService.executeCommand(HandlerService.java:165)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.executeCommand(WorkbenchKeyboard.java:470)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.press(WorkbenchKeyboard.java:821)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.processKeyEvent(WorkbenchKeyboard.java:879)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.filterKeySequenceBindings(WorkbenchKeyboard.java:568)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.access$3(WorkbenchKeyboard.java:510)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard$KeyDownFilter.handleEvent(WorkbenchKeyboard.java:126)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1141)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:937)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:962)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:947)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:975)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:971)
+	at org.eclipse.swt.widgets.Widget.wmChar(Widget.java:1285)
+	at org.eclipse.swt.widgets.Control.WM_CHAR(Control.java:3772)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:3672)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:291)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:4351)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2265)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3291)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)
+
+1203041850125: version: 0.0.8
+1203041850125: input: helper super class
+1203041850703: desired type: null
+1203041850968: stats: w:2247 l:505 f:9122 t1059
+1203041850968: guess: getMethodsOfName_helper(b.getDeclaringClass(), JavaCore.COMPILER_PB_ANNOTATION_SUPER_INTERFACE, v)
+1203041850968: guess: getMethodsOfName_helper(m.getDeclaringClass(), JavaCore.COMPILER_PB_ANNOTATION_SUPER_INTERFACE, v)
+1203041850968: guess: getMethodsOfName_helper(b.getDeclaringClass(), JavaCore.COMPILER_PB_OVERRIDING_METHOD_WITHOUT_SUPER_INVOCATION, v)
+1203041876796: version: 0.0.8
+1203041876796: input: helper super class name
+1203041876875: desired type: null
+1203041877125: stats: w:1328 l:1001 f:9122 t1059
+1203041877125: no guesses
+1203041899812: version: 0.0.8
+1203041899812: input: helper super class 
+1203041899875: desired type: null
+1203041900093: stats: w:2247 l:505 f:9122 t1059
+1203041900093: guess: getMethodsOfName_helper(b.getDeclaringClass(), JavaCore.COMPILER_PB_ANNOTATION_SUPER_INTERFACE, v)
+1203041900093: guess: getMethodsOfName_helper(m.getDeclaringClass(), JavaCore.COMPILER_PB_ANNOTATION_SUPER_INTERFACE, v)
+1203041900093: guess: getMethodsOfName_helper(b.getDeclaringClass(), JavaCore.COMPILER_PB_OVERRIDING_METHOD_WITHOUT_SUPER_INVOCATION, v)
+1203041905750: version: 0.0.8
+1203041905750: input: helper super name
+1203041905828: desired type: null
+1203041906031: stats: w:1295 l:677 f:9122 t1059
+1203041906046: guess: getMethodsOfName_helper(b, name, new Vector<IMethodBinding>(IProblem.DuplicateSuperInterface))
+1203041906046: guess: getMethodsOfName_helper(b, name, new Vector<IMethodBinding>(IProblem.SuperInterfacesCollide))
+1203041906046: guess: EclipseUtil.getMethodsOfName_helper(b, name, new Vector<IMethodBinding>(IProblem.DuplicateSuperInterface))
+1203041923312: version: 0.0.8
+1203041923312: input: helper super class name
+1203041923390: desired type: null
+1203041923640: stats: w:1328 l:1001 f:9122 t1059
+1203041923640: no guesses
+1203041928578: version: 0.0.8
+1203041928578: input: helper super
+1203041928640: desired type: null
+1203041928796: stats: w:629 l:142 f:9122 t1059
+1203041928796: guess: getMethodsOfName_helper(b, JavaCore.COMPILER_PB_ANNOTATION_SUPER_INTERFACE, v)
+1203041928796: guess: getMethodsOfName_helper(b, JavaCore.COMPILER_PB_OVERRIDING_METHOD_WITHOUT_SUPER_INVOCATION, v)
+1203041928796: guess: EclipseUtil.getMethodsOfName_helper(b, JavaCore.COMPILER_PB_ANNOTATION_SUPER_INTERFACE, v)
+1203041941437: version: 0.0.8
+1203041941437: input: helper superclass 
+1203041941500: desired type: null
+1203041941718: stats: w:2276 l:976 f:9122 t1059
+1203041941718: guess: getMethodsOfName_helper(b.getSuperclass(), name, v)
+1203041941718: guess: getExternalClassName_helper(b.getSuperclass(), m, new StringBuffer())
+1203041941718: guess: getMethodsOfName_helper(b.getSuperclass(), "Hello", v)
+1203041945609: chosen: getMethodsOfName_helper(b.getSuperclass(), name, v)
+1203041991359: version: 0.0.8
+1203041991359: input: helper 
+1203041991859: desired type: null
+1203041992062: stats: w:1378 l:355 f:10070 t1116
+1203041992062: guess: getMethodsOfName_helper(i, name, v)
+1203041992062: guess: getMethodsOfName_helper(b, name, v)
+1203041992062: guess: getMethodsOfName_helper(i, "Hello", v)
+1203041993296: chosen: getMethodsOfName_helper(i, name, v)
+1203053007843: version: 0.0.8
+1203053007843: input: helper v
+1203053008265: desired type: null
+1203053008453: stats: w:679 l:170 f:9170 t1056
+1203053008453: guess: getMethodsOfName_helper(b, name, v)
+1203053008453: guess: getMethodsOfName_helper(b, "Hello", v)
+1203053008453: guess: getMethodsOfName_helper(b, Font.SERIF, v)
+1203053010718: chosen: getMethodsOfName_helper(b, name, v)
+1203053076703: version: 0.0.8
+1203053076703: input: get methods
+1203053076765: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053076937: stats: w:418 l:71 f:9175 t1056
+1203053076937: guess: getMethodsOfName(b, "Hello")
+1203053076937: guess: getMethodsOfName(b, Font.DIALOG)
+1203053076937: guess: getMethodsOfName(b, Font.MONOSPACED)
+1203053085234: chosen: getMethodsOfName(b, "Hello")
+1203053088734: version: 0.0.8
+1203053088734: input: getMethodsOfName a b
+1203053088796: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053089015: stats: w:109 l:56 f:9175 t1056
+1203053089015: guess: getMethodsOfName(getEnclosingClass(a), getExternalClassName(b))
+1203053089015: guess: getMethodsOfName(getHoleType(a), getExternalClassName(b))
+1203053089015: guess: getMethodsOfName(getClassForMethodInvocation(a), getExternalClassName(b))
+1203053125968: version: 0.0.8
+1203053125968: input: getMethodsOfName a b name
+1203053126421: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053126703: stats: w:3 l:4 f:9557 t1081
+1203053126703: no guesses
+1203053174875: version: 0.0.8
+1203053174875: input: methods b a to
+1203053174953: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053175140: stats: w:144 l:45 f:9557 t1081
+1203053175140: guess: getMethodsOfName(b, 'a'.toString('a'))
+1203053175140: guess: getMethodsOfName(b, 'a'.toOctalString('a'))
+1203053175140: guess: getMethodsOfName(b, 'a'.toBinaryString('a'))
+1203053183453: version: 0.0.8
+1203053183453: input: methods b a to name
+1203053183500: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053183718: stats: w:148 l:46 f:9557 t1081
+1203053183718: guess: getMethodsOfName(b, 'a'.toString('a'))
+1203053183718: guess: getMethodsOfName(b, 'a'.toBinaryString('a'))
+1203053183718: guess: getMethodsOfName(b, 'a'.toOctalString('a'))
+1203053208953: version: 0.0.8
+1203053208953: input: methods b to name
+1203053209015: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053209203: stats: w:237 l:68 f:9557 t1081
+1203053209203: guess: getMethodsOfName(b, UU.profileToString())
+1203053209203: guess: EclipseUtil.getMethodsOfName(b, UU.profileToString())
+1203053209203: guess: this.getMethodsOfName(b, UU.profileToString())
+1203053211718: version: 0.0.8
+1203053211718: input: methods b to name a
+1203053211796: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053212000: stats: w:148 l:46 f:9557 t1081
+1203053212000: guess: getMethodsOfName(b, 'a'.toString('a'))
+1203053212000: guess: getMethodsOfName(b, 'a'.toBinaryString('a'))
+1203053212000: guess: getMethodsOfName(b, 'a'.toOctalString('a'))
+1203053577203: version: 0.0.8
+1203053577203: input: a name
+1203053577640: desired type: null
+1203053577812: stats: w:37 l:12 f:9187 t1063
+1203053577812: guess: a.getName()
+1203053577812: guess: a.NAME_PROPERTY
+1203053577812: guess: a.SIMPLE_NAME
+1203053590281: version: 0.0.8
+1203053590281: input: methods name a to
+1203053590328: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053590515: stats: w:152 l:43 f:9186 t1063
+1203053590515: guess: getMethodsOfName(getEnclosingClass(a), UU.profileToString())
+1203053590515: guess: getMethodsOfName(getHoleType(a), UU.profileToString())
+1203053590515: guess: getMethodsOfName(getClassForMethodInvocation(a), UU.profileToString())
+1203053596843: version: 0.0.8
+1203053596843: input: methods name a to b
+1203053596921: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053597109: stats: w:148 l:46 f:9186 t1063
+1203053597125: guess: getMethodsOfName(b, 'a'.toString('a'))
+1203053597125: guess: getMethodsOfName(b, 'a'.toBinaryString('a'))
+1203053597125: guess: getMethodsOfName(b, 'a'.toOctalString('a'))
+1203053606296: version: 0.0.8
+1203053606296: input: methods name a to b get
+1203053606796: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053607015: stats: w:251 l:75 f:9521 t1084
+1203053607031: guess: getMethodsOfName(b, 'a'.toString('a', 'a'))
+1203053607031: guess: getMethodsOfName(b, 'a'.toString(ASTNode.SIMPLE_NAME, 'a'))
+1203053607031: guess: getMethodsOfName(b, 'a'.toString('a', ASTNode.SIMPLE_NAME))
+1203053609250: version: 0.0.8
+1203053609250: input: methods name a to b get get
+1203053609312: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053609562: stats: w:366 l:115 f:9521 t1084
+1203053609562: guess: getMethodsOfName(b.getSuperclass(), 'a'.toString('a', 'a'))
+1203053609562: guess: getMethodsOfName(b.getDeclaringClass(), 'a'.toString('a', 'a'))
+1203053609562: guess: getMethodsOfName(b.getSuperclass(), 'a'.toString('a', ASTNode.QUALIFIED_NAME))
+1203053613343: version: 0.0.8
+1203053613343: input: methods name a to b get get get
+1203053613406: desired type: java.util.Vector<org.eclipse.jdt.core.dom.IMethodBinding>
+1203053614484: stats: w:3 l:7 f:9521 t1084
+1203053614484: no guesses
+1203828652937: version: 0.0.12
+1203828652937: input: add line
+1203828652968: model cache miss
+1203828653406: desired type: null
+1203828653546: stats: w:764 l:251 f:7425 t1042
+1203828653546: guess: list.add(IMarker.LINE_NUMBER)
+1203828653546: guess: new Vector().add(new LineMetrics())
+1203828653546: guess: new Vector().add(IMarker.LINE_NUMBER)
+1203844509453: version: 0.0.12
+1203844509453: input: millis 
+1203844509468: model cache miss
+1203844509890: desired type: null
+1203844510000: stats: w:30 l:10 f:7056 t1098
+1203844510000: guess: System.currentTimeMillis()
+1203844510000: guess: wait(System.currentTimeMillis())
+1203844510000: guess: equals(System.currentTimeMillis())
+1203844518859: version: 0.0.12
+1203844518859: input: time 
+1203844518921: desired type: null
+1203844519062: stats: w:27 l:6 f:7056 t1098
+1203844519062: guess: TimeUnit.MILLISECONDS
+1203844519062: guess: TimeUnit.MICROSECONDS
+1203844519062: guess: TimeUnit.HOURS
+1203844523031: version: 0.0.12
+1203844523031: input: millis 
+1203844523078: desired type: null
+1203844523203: stats: w:30 l:10 f:7056 t1098
+1203844523203: guess: System.currentTimeMillis()
+1203844523203: guess: wait(System.currentTimeMillis())
+1203844523203: guess: equals(System.currentTimeMillis())
+1203844568187: version: 0.0.12
+1203844568187: input: millis 
+1203844568234: desired type: null
+1203844568359: stats: w:30 l:10 f:7056 t1098
+1203844568359: guess: System.currentTimeMillis()
+1203844568359: guess: wait(System.currentTimeMillis())
+1203844568359: guess: equals(System.currentTimeMillis())
+1203844569140: chosen: System.currentTimeMillis()
+1204420546296: version: 0.0.12
+1204420546296: input: public static void hello
+1204420546515: model cache miss
+1204420548140: desired type: null
+1204420548421: stats: w:1 l:1 f:5354 t1022
+1204420548421: no guesses
+1204420586734: version: 0.0.12
+1204420586734: input: public static int what
+1204420586890: desired type: null
+1204420587093: stats: w:1 l:1 f:5354 t1022
+1204420587093: no guesses
+1204420615437: version: 0.0.12
+1204420615437: input: public static int what
+1204420616265: desired type: null
+1204420616531: stats: w:1 l:1 f:6077 t1211
+1204420616531: no guesses
+1204420643281: version: 0.0.12
+1204420643281: input: public static int what
+1204420643484: desired type: null
+1204420643671: stats: w:1 l:1 f:6082 t1211
+1204420643671: no guesses
