@@ -90,10 +90,130 @@ public class Main {
 
         t.printStackTrace();
     }
-
-    public List<MyCompletionProposal> getProposals(ICompilationUnit unit,
+    // TODO: WHERE DOES THIS FUNCT GET CALLED FROM???
+    public List<SOCompletionProposal> getProposals(ICompilationUnit unit,
             IDocument doc, int selectionOffset, int selectionLength) {
-        try {
+     	try {
+             lastProject = unit.getJavaProject().getProject();
+
+             // work here
+             UU.profileClear();
+             UU.profile("all");
+
+             // work here
+             UU.profile("part 1");
+
+             Main main = Main.getMain();
+             //Vector<MyCompletionProposal> list = new Vector();
+             Vector<SOCompletionProposal> list = new Vector();
+             int cursorOffset = selectionOffset + selectionLength;
+             IJavaProject javaProject = unit.getJavaProject();
+
+             // find the quack (keyword command)
+             String quack;
+             int quackOffset;
+             if (selectionLength > 0) {
+                 quack = doc.get(selectionOffset, selectionLength);
+                 quackOffset = selectionOffset;
+             } else {
+                 IRegion lineRegion = doc
+                         .getLineInformationOfOffset(cursorOffset);
+                 int lineOffset = lineRegion.getOffset();
+                 String line = doc.get(lineOffset, cursorOffset - lineOffset);
+                 quackOffset = EclipseUtil.determineKeywordsStart(line);
+                 if (quackOffset < 0)
+                     return list;
+                 quack = line.substring(quackOffset);
+                 quackOffset += lineOffset;
+                 
+                 // make sure there is a space in it before we conclude it is a quack
+                 boolean sureItsAQuack = UU.matches(" |^_$", quack);
+                 if (!sureItsAQuack) {
+                     return list;
+                 }
+             }
+             Ident quackIdent = new Ident(quack);
+
+             log("version: 0.0.13");
+             log("input: " + quack);
+
+             // work here
+             UU.profile("part 1");
+
+             // work here
+             UU.profile("ast build");
+
+             String standinExpression = "null";
+             StringBuffer buf = new StringBuffer(doc.get());
+             buf.replace(quackOffset, cursorOffset, standinExpression);
+             CompilationUnit ast = EclipseUtil.compile(unit, unit
+                     .getJavaProject(), buf.toString().toCharArray(), 0);
+
+             // work here
+             UU.profile("ast build");
+
+             // work here
+             UU.profile("model");
+
+             Model model = modelCache.getModel(unit, ast);
+             synchronized (model) {
+                 model.processTypesForAST(ast);
+
+                 // work here
+                 UU.profile("model");
+
+                 // work here
+                 UU.profile("count funcs");
+
+                 // work here
+                 Bag<String> functionCallCounts = new Bag();
+                 EclipseUtil.countCallsToDifferentMethodsAndFields(ast,
+                         functionCallCounts);
+
+                 // work here
+                 UU.profile("count funcs");
+
+                 // work here
+                 UU.profile("walker{}");
+
+                 model.functionCallCounts = functionCallCounts;
+                 Deslopper d = new Deslopper();
+                 Walker w = new Walker(ast, model, quackOffset, quackIdent, d);
+
+                 // work here
+                 UU.profile("walker{}");
+
+                 // work here
+                 UU.profile("all");
+//                 UU.profilePrint();
+
+                 if (w.guesses.size() == 0) {
+                     log("no guesses");
+                 }
+                 
+                 int i = 0;
+                 for (String guess : w.guesses) {
+                 	list.add(new SOCompletionProposal(unit.getJavaProject()
+                             .getProject(), guess, quackOffset, quack.length(),
+                             guess.length(), null, guess + " [from Quack]",
+                             null, null, 1000000 - i));
+                     /*list.add(new MyCompletionProposal(unit.getJavaProject()
+                             .getProject(), guess, quackOffset, quack.length(),
+                             guess.length(), null, guess + " [from Quack]",
+                             null, null, 1000000 - i));*/
+                     i++;
+                 }
+                 return list;
+             }
+         } catch (Throwable e) {
+             log("Main.java(at end)", e);
+             throw new Error(e);
+         }
+     }
+    
+    public List<MyCompletionProposal> getCOMPProposals(ICompilationUnit unit,
+           IDocument doc, int selectionOffset, int selectionLength) {
+    	try {
             lastProject = unit.getJavaProject().getProject();
 
             // work here
