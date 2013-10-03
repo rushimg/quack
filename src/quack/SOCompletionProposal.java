@@ -60,7 +60,7 @@ public class SOCompletionProposal implements ICompletionProposal, IJavaCompletio
         fCursorPosition = cursorPosition;
         fImage = image;
         fDisplayString = displayString;
-        fDisplayString = "RUSHI";
+        //fDisplayString = "RUSHI";
         fContextInformation = contextInformation;
         fAdditionalProposalInfo = additionalProposalInfo;
         fRelevance = relevance;

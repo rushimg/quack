@@ -20,12 +20,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.json.JSONObject;
 import org.omg.CORBA.portable.InputStream;
 
 import sun.misc.IOUtils;
 
 import com.sun.tools.hat.internal.parser.Reader;
+import com.sun.tools.javac.code.Attribute.Array;
 
 import MyUtil.Bag;
 import MyUtil.Pair;
@@ -107,7 +107,7 @@ public class Main {
             IDocument doc, int selectionOffset, int selectionLength) {
      	try {
              lastProject = unit.getJavaProject().getProject();
-
+           
              // work here
              UU.profileClear();
              UU.profile("all");
@@ -116,28 +116,7 @@ public class Main {
              UU.profile("part 1");
 
              Main main = Main.getMain();
-             //TODO: Just testing out the HTTP get for queries, DELETE later
-             String strUrl = "http://api.stackexchange.com/2.1/search?order=desc&sort=activity&tagged=java&intitle=add%20line&site=stackoverflow&filter=!--iqJbOieOg3";
-             URL url = new URL(strUrl);
-     		 //java.net.URLConnection connection = url.openConnection();
-     		 //java.io.InputStream is = connection.getInputStream();
-     		 //InputStreamReader isr = new InputStreamReader(is);
-     		 //BufferedReader br = new BufferedReader(isr);
-     		 BufferedReader br = new BufferedReader(new InputStreamReader(new GZIPInputStream(url.openStream())));
-     		 StringBuilder builder = new StringBuilder();
-     		 String temp_line = null;
-     		 String rawText = null;
-     		 while ((temp_line = br.readLine()) != null)
-     	     {
-     			builder.append(temp_line); 
-     			//System.out.print("heelo");
-     	     }
-     	     // JSONObject json = new JSONObject(rawText.toString());
-     		//Object obj=JSONValue.parse(content.toString());
-     		//JSONArray finalResult=(JSONArray)obj;
-     		//System.out.println(finalResult);
-     		
-             //TODO: end of http section
+             
      		 
              //Vector<MyCompletionProposal> list = new Vector();
              Vector<SOCompletionProposal> list = new Vector();
@@ -167,80 +146,20 @@ public class Main {
                      return list;
                  }
              }
-             Ident quackIdent = new Ident(quack);
-
-             log("version: 0.0.13");
-             log("input: " + quack);
-
-             // work here
-             UU.profile("part 1");
-
-             // work here
-             UU.profile("ast build");
-
-             String standinExpression = "null";
-             StringBuffer buf = new StringBuffer(doc.get());
-             buf.replace(quackOffset, cursorOffset, standinExpression);
-             CompilationUnit ast = EclipseUtil.compile(unit, unit
-                     .getJavaProject(), buf.toString().toCharArray(), 0);
-
-             // work here
-             UU.profile("ast build");
-
-             // work here
-             UU.profile("model");
-
-             Model model = modelCache.getModel(unit, ast);
-             synchronized (model) {
-                 model.processTypesForAST(ast);
-
-                 // work here
-                 UU.profile("model");
-
-                 // work here
-                 UU.profile("count funcs");
-
-                 // work here
-                 Bag<String> functionCallCounts = new Bag();
-                 EclipseUtil.countCallsToDifferentMethodsAndFields(ast,
-                         functionCallCounts);
-
-                 // work here
-                 UU.profile("count funcs");
-
-                 // work here
-                 UU.profile("walker{}");
-
-                 model.functionCallCounts = functionCallCounts;
-                 Deslopper d = new Deslopper();
-                 Walker w = new Walker(ast, model, quackOffset, quackIdent, d);
-
-                 // work here
-                 UU.profile("walker{}");
-
-                 // work here
-                 UU.profile("all");
-//                 UU.profilePrint();
-
-                 if (w.guesses.size() == 0) {
-                     log("no guesses");
-                 }
-                 
-                 int i = 0;
-                 //for (i=0; i<1;i++){
-                 for (String guess : w.guesses) {
+       
+             SOFunctions sof = new SOFunctions();
+             URL url = sof.createURL(quack);
+             String raw_text = sof.httpGetSO(url);
+             System.out.print(sof.processJSON(raw_text));
+             
+                 for (int i=0; i<3;i++){
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
-                             .getProject(), guess, quackOffset, quack.length(),
-                             guess.length(), null, guess + " [from Quack]",
+                             .getProject(), "GUESS", quackOffset, quack.length(),
+                             "GUESS".length(), null, "GUESS" + " [from SO_Quack]",
                              null, null, 1000000 - i));
-                     /*list.add(new MyCompletionProposal(unit.getJavaProject()
-                             .getProject(), guess, quackOffset, quack.length(),
-                             guess.length(), null, guess + " [from Quack]",
-                             null, null, 1000000 - i));*/
-                     i++;
                  }
                  return list;
-             }
+             
          } catch (Throwable e) {
              log("Main.java(at end)", e);
              throw new Error(e);
