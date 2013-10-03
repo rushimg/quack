@@ -10,6 +10,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
+
 public class SOCompletionProposal implements ICompletionProposal, IJavaCompletionProposal {
 
     private IProject project;
@@ -44,7 +45,9 @@ public class SOCompletionProposal implements ICompletionProposal, IJavaCompletio
             Image image, String displayString,
             IContextInformation contextInformation,
             String additionalProposalInfo, int relevance) {
-        Assert.isNotNull(replacementString);
+        
+    	
+    	Assert.isNotNull(replacementString);
         Assert.isTrue(replacementOffset >= 0);
         Assert.isTrue(replacementLength >= 0);
         Assert.isTrue(cursorPosition >= 0);

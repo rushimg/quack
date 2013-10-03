@@ -1,12 +1,17 @@
 package quack;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.StringBufferInputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -15,6 +20,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.json.JSONObject;
+import org.omg.CORBA.portable.InputStream;
+
+import sun.misc.IOUtils;
+
+import com.sun.tools.hat.internal.parser.Reader;
 
 import MyUtil.Bag;
 import MyUtil.Pair;
@@ -90,6 +101,7 @@ public class Main {
 
         t.printStackTrace();
     }
+
     // TODO: WHERE DOES THIS FUNCT GET CALLED FROM???
     public List<SOCompletionProposal> getProposals(ICompilationUnit unit,
             IDocument doc, int selectionOffset, int selectionLength) {
@@ -104,6 +116,29 @@ public class Main {
              UU.profile("part 1");
 
              Main main = Main.getMain();
+             //TODO: Just testing out the HTTP get for queries, DELETE later
+             String strUrl = "http://api.stackexchange.com/2.1/search?order=desc&sort=activity&tagged=java&intitle=add%20line&site=stackoverflow&filter=!--iqJbOieOg3";
+             URL url = new URL(strUrl);
+     		 //java.net.URLConnection connection = url.openConnection();
+     		 //java.io.InputStream is = connection.getInputStream();
+     		 //InputStreamReader isr = new InputStreamReader(is);
+     		 //BufferedReader br = new BufferedReader(isr);
+     		 BufferedReader br = new BufferedReader(new InputStreamReader(new GZIPInputStream(url.openStream())));
+     		 StringBuilder builder = new StringBuilder();
+     		 String temp_line = null;
+     		 String rawText = null;
+     		 while ((temp_line = br.readLine()) != null)
+     	     {
+     			builder.append(temp_line); 
+     			//System.out.print("heelo");
+     	     }
+     	     // JSONObject json = new JSONObject(rawText.toString());
+     		//Object obj=JSONValue.parse(content.toString());
+     		//JSONArray finalResult=(JSONArray)obj;
+     		//System.out.println(finalResult);
+     		
+             //TODO: end of http section
+     		 
              //Vector<MyCompletionProposal> list = new Vector();
              Vector<SOCompletionProposal> list = new Vector();
              int cursorOffset = selectionOffset + selectionLength;
@@ -192,6 +227,7 @@ public class Main {
                  }
                  
                  int i = 0;
+                 //for (i=0; i<1;i++){
                  for (String guess : w.guesses) {
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
                              .getProject(), guess, quackOffset, quack.length(),
