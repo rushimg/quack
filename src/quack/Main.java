@@ -150,12 +150,14 @@ public class Main {
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
              String raw_text = sof.httpGetSO(url);
-             System.out.print(sof.processJSON(raw_text));
+             Vector<ResponseObj> rawResponses =  sof.processJSON(raw_text);
+             //System.out.print(sof.processJSON(raw_text));
+             for(int i=0; i< rawResponses.size(); i++){
              
-                 for (int i=0; i<3;i++){
+                 //for (int i=0; i<3;i++){
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
-                             .getProject(), "GUESS", quackOffset, quack.length(),
-                             "GUESS".length(), null, "GUESS" + " [from SO_Quack]",
+                             .getProject(), rawResponses.get(i).getResponseString(), quackOffset, quack.length(),
+                             "GUESS".length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
                  }
                  return list;

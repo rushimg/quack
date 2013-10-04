@@ -14,29 +14,49 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sun.tools.javac.util.List;
+
 import MyUtil.UU;
 
 public class SOFunctions {
+	private int return_num = 2; 
 	
 	public SOFunctions() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String processJSON(String rawText){
-		String firstArray = null;
+	public Vector<ResponseObj> processJSON(String rawText){
+		Vector<ResponseObj> list = new Vector<ResponseObj>();
 		
 		try {
 			JSONObject jsonObj = new JSONObject(rawText.toString());
+			//JSONArray jsonArray = jsonObj.getJSONArray("items");
+			//JSONArray jsonArray2 = new JSONArray(jsonArray.toString());
 			
-			//JSONArray jsonArray = new JSONArray(rawText.toString());
-			System.out.print(jsonObj);
+			//JSONObject pilot = json.getJSONObject("pilot");
+			//JSONObject jsonObj1 = new JSONObject(jsonArray2.get(1));
+			//System.out.print(jsonObj);
+			
+			for(int i = 0; i< return_num; i++){
+				ResponseObj temp_respObj = new ResponseObj();
+				temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(0).get("answer_id").toString());
+				temp_respObj.setResponseString(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(0).get("body").toString());
+				list.add(temp_respObj);
+				System.out.print(temp_respObj.getDisplayString());
+				System.out.print(temp_respObj.getResponseString());
+			}
+			
+			//System.out.print(jsonObj.getJSONArray("items").getJSONObject(0).getJSONArray("answers").getJSONObject(0).get("body"));
+			
+			
+			
 			//firstArray = jsonArray.getString(0);
 			//jsonObj.
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return rawText;
+		return list;
 	}
 	
 	public String httpGetSO(URL url){
