@@ -146,8 +146,6 @@ public class Main {
                      return list;
                  }
              }
-             System.out.print("HERE");
-             System.out.print(quack);
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
              String raw_text = sof.httpGetSO(url);

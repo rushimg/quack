@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 import org.eclipse.jdt.core.IJavaProject;
@@ -13,6 +15,7 @@ import org.eclipse.jface.text.IRegion;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.sun.tools.javac.util.List;
 
@@ -43,7 +46,7 @@ public class SOFunctions {
 					total++;
 					ResponseObj temp_respObj = new ResponseObj();
 					temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("answer_id").toString());
-					temp_respObj.setReplacementString(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("body").toString());
+					temp_respObj.setReplacementString(this.cleanCode(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("body").toString()));
 					list.add(temp_respObj);
 					//System.out.print(temp_respObj.getDisplayString());
 					//System.out.print(temp_respObj.getReplacementString());
@@ -56,6 +59,19 @@ public class SOFunctions {
 		
 		return list;
 	}
+	
+	private String cleanCode(String input){
+		String cleaned = Jsoup.parse(input).select("code").text();
+		return cleaned;
+	}
+	
+	/*private JSONObject getSingleJSONObject(JSONObject jsonObj, int index){
+		JSONObject temp = null;
+		try {
+			temp = jsonObj.getJSONArray("items").getJSONObject(index);
+		} catch (JSONException e) { e.printStackTrace();} 
+		return temp;
+	}*/
 	
 	/*private String getAnswerId(JSONObject jsonObj,int index1, int index2){
 		return (jsonObj.getJSONArray("items").getJSONObject(index1).getJSONArray("answers").getJSONObject(index2).get("answer_id")).toString();
@@ -125,8 +141,7 @@ public class SOFunctions {
 		//System.out.print(jsonObj);
 		//temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(1).getJSONArray("answers").getJSONObject(0).get("answer_id").toString());
 		//temp_respObj.setReplacementString(jsonObj.getJSONArray("items").getJSONObject(1).getJSONArray("answers").getJSONObject(0).get("body").toString());
-		//list.add(temp_respObj);
-		
+		//list.add(temp_respObj);		
 	}	
 	
 	
