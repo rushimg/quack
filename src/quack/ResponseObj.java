@@ -4,7 +4,7 @@ public class ResponseObj {
 	
 	private String displayString = null;
 	
-	private String responseString = null;
+	private String replacementString = null;
 	
 	public ResponseObj() {
 		
@@ -18,12 +18,12 @@ public class ResponseObj {
 		return this.displayString;
 	}
 	
-	public void setResponseString(String in){
-		this.responseString = in;
+	public void setReplacementString(String in){
+		this.replacementString = in;
 	}
 	
-	public String getResponseString(){
-		return this.responseString;
+	public String getReplacementString(){
+		return this.replacementString;
 	}
 	
 }

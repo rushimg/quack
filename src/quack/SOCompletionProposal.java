@@ -53,14 +53,12 @@ public class SOCompletionProposal implements ICompletionProposal, IJavaCompletio
         Assert.isTrue(cursorPosition >= 0);
 
         project = proj;
-        //fReplacementString = "RUSHI";
         fReplacementString = replacementString;
         fReplacementOffset = replacementOffset;
         fReplacementLength = replacementLength;
         fCursorPosition = cursorPosition;
         fImage = image;
         fDisplayString = displayString;
-        //fDisplayString = "RUSHI";
         fContextInformation = contextInformation;
         fAdditionalProposalInfo = additionalProposalInfo;
         fRelevance = relevance;

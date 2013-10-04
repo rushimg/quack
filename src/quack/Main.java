@@ -146,18 +146,18 @@ public class Main {
                      return list;
                  }
              }
-       
+             System.out.print("HERE");
+             System.out.print(quack);
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
              String raw_text = sof.httpGetSO(url);
              Vector<ResponseObj> rawResponses =  sof.processJSON(raw_text);
-             //System.out.print(sof.processJSON(raw_text));
-             for(int i=0; i< rawResponses.size(); i++){
              
-                 //for (int i=0; i<3;i++){
+             for(int i=0; i< rawResponses.size(); i++){
+
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
-                             .getProject(), rawResponses.get(i).getResponseString(), quackOffset, quack.length(),
-                             "GUESS".length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
+                             .getProject(), rawResponses.get(i).getReplacementString(), quackOffset, quack.length(),
+                             rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
                  }
                  return list;
