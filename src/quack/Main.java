@@ -102,7 +102,6 @@ public class Main {
         t.printStackTrace();
     }
 
-    // TODO: WHERE DOES THIS FUNCT GET CALLED FROM???
     public List<SOCompletionProposal> getProposals(ICompilationUnit unit,
             IDocument doc, int selectionOffset, int selectionLength) {
      	try {
@@ -148,6 +147,7 @@ public class Main {
              }
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
+             log("API Call URL: "+ url.toString());
              String raw_text = sof.httpGetSO(url);
              Vector<ResponseObj> rawResponses =  sof.processJSON(raw_text);
              
@@ -166,7 +166,7 @@ public class Main {
          }
      }
     
-    public List<MyCompletionProposal> getCOMPProposals(ICompilationUnit unit,
+    public List<MyCompletionProposal> getCOMProposals(ICompilationUnit unit,
            IDocument doc, int selectionOffset, int selectionLength) {
     	try {
             lastProject = unit.getJavaProject().getProject();
