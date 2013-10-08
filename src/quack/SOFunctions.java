@@ -43,15 +43,17 @@ public class SOFunctions {
 				
 				for (int j = 0; j<num_answers ; j++){
 					if (total>=this.return_num){ break; }
+					String repString  = this.cleanCode(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("body").toString());
+					if (repString != null){
 					total++;
 					ResponseObj temp_respObj = new ResponseObj();
 					temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).get("title").toString());
 					//temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("answer_id").toString());
-					temp_respObj.setReplacementString(this.cleanCode(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("body").toString()));
+					temp_respObj.setReplacementString(repString);
 					list.add(temp_respObj);
-					//System.out.print(temp_respObj.getDisplayString());
-					//System.out.print(temp_respObj.getReplacementString());
+					}
 				}
+					
 			}
 			
 		} catch (JSONException e) {
@@ -63,7 +65,7 @@ public class SOFunctions {
 	
 	private String cleanCode(String input){
 		String cleaned = Jsoup.parse(input).select("code").text();
-		if (cleaned.isEmpty()){ return input;} 
+		if (cleaned.isEmpty()){ return null;} 
 		else {return cleaned;}
 	}
 	
