@@ -140,6 +140,7 @@ public class Main {
                  quackOffset += lineOffset;
                  
                  // make sure there is a space in it before we conclude it is a quack
+                 //TODO: do we really need this check? 
                  boolean sureItsAQuack = UU.matches(" |^_$", quack);
                  if (!sureItsAQuack) {
                      return list;
@@ -208,7 +209,7 @@ public class Main {
             }
             Ident quackIdent = new Ident(quack);
 
-            log("version: 0.0.13");
+            log("version: 0.0.SO");
             log("input: " + quack);
 
             // work here
@@ -232,7 +233,6 @@ public class Main {
             Model model = modelCache.getModel(unit, ast);
             synchronized (model) {
                 model.processTypesForAST(ast);
-
                 // work here
                 UU.profile("model");
 
@@ -275,9 +275,11 @@ public class Main {
                 }
                 return list;
             }
+           
         } catch (Throwable e) {
             log("Main.java(at end)", e);
             throw new Error(e);
         }
+    	
     }
 }

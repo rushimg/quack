@@ -140,6 +140,7 @@ public class Model {
             }
             for (Type t : types) {
                 t.addSubTypeCount();
+               // System.out.println(t.toString());
             }
             Collections.sort(types);
         } catch (Throwable e) {

@@ -21,15 +21,14 @@ public class VariableParser {
 		try {
 			while( (line=bufReader.readLine()) != null )
 			{
+				line = this.cleanString(line);
 				//Simple Ones (primitives)
-				if (line.indexOf("int") != -1)
+				/*if (line.indexOf("int") != -1)
 					System.out.println(line);
 				else if (line.indexOf("char") != -1)
 					System.out.println(line);
-				else if (line.indexOf("String") != -1)
-					System.out.println(line);
-				else
-					this.getInstances(line);
+				else*/
+				this.getInstances(line);
 				//More complex ones (objects)
 			}
 		} catch (IOException e) { e.printStackTrace();}
@@ -37,15 +36,36 @@ public class VariableParser {
 		//System.out.println(inputCode);
 	}
 	
+	private String cleanString(String unCleanString){
+		//repalce with space
+		String cleanerUnCleanString = "";
+		//cleanerUnCleanString = unCleanString.replace(")", " ");
+		cleanerUnCleanString = unCleanString.replace(")", " ");
+		cleanerUnCleanString = cleanerUnCleanString.replace("(", " ");
+		cleanerUnCleanString = cleanerUnCleanString.replace("]"," ");
+		cleanerUnCleanString = cleanerUnCleanString.replace("["," ");
+		cleanerUnCleanString = cleanerUnCleanString.replace(","," ");
+		//replace with nothing
+		cleanerUnCleanString = cleanerUnCleanString.replace("\"","");
+		cleanerUnCleanString = cleanerUnCleanString.replace("\'","");
+		return cleanerUnCleanString;
+	}
+	
 	private String getInstances(String line){
 		// idea here is that java programs follow the typical format ClassName instanceName
 		String[] spaces = line.split(" ");
-		for(int i=0; i< spaces.length ; i++){
-			if (spaces[i].length() > 1){
-				if (Character.isUpperCase(spaces[i].charAt(0)) & (i<spaces.length-1))
-					System.out.println(spaces[i] + " " + spaces[i+1]);
+		for(int i=0; i< spaces.length-1 ; i++){
+			if ((spaces[i].length() > 0) && (spaces[i+1].length() > 0)){
+				//TODO: add in all primitive types
+				if (Character.isUpperCase(spaces[i].charAt(0)) || "int".equals(spaces[i])){
+					//System.out.println("hjkasdkjas " + spaces[i] + " " + spaces[i+1]);
+					if (Character.isLowerCase(spaces[i+1].charAt(0)))
+						System.out.println(spaces[i] + " " + spaces[i+1]);
+				}
 			}
 		}
-		return "hrlkasd";
+		return "";
 	}
+	
+	
 }
