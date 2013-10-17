@@ -52,6 +52,9 @@ public class SOCompletionProposal implements ICompletionProposal, IJavaCompletio
         Assert.isTrue(replacementLength >= 0);
         Assert.isTrue(cursorPosition >= 0);
 
+        VariableParser varPar = new VariableParser();
+        varPar.parse(replacementString);
+        
         project = proj;
         fReplacementString = replacementString;
         fReplacementOffset = replacementOffset;

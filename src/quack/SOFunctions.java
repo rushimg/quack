@@ -43,19 +43,20 @@ public class SOFunctions {
 				
 				for (int j = 0; j<num_answers ; j++){
 					if (total>=this.return_num){ break; }
+					
 					String repString  = this.cleanCode(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("body").toString());
+					
 					if (repString != null){
-					total++;
-					ResponseObj temp_respObj = new ResponseObj();
-					temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).get("title").toString());
-					//temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("answer_id").toString());
-					temp_respObj.setReplacementString(repString);
-					list.add(temp_respObj);
+						total++;
+						ResponseObj temp_respObj = new ResponseObj();
+						temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).get("title").toString());
+						//temp_respObj.setDisplayString(jsonObj.getJSONArray("items").getJSONObject(i).getJSONArray("answers").getJSONObject(j).get("answer_id").toString());
+						temp_respObj.setReplacementString(repString);
+						list.add(temp_respObj);
 					}
 				}
 					
 			}
-			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
