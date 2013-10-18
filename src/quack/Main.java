@@ -16,7 +16,9 @@ import java.util.zip.GZIPInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -116,8 +118,14 @@ public class Main {
 
              Main main = Main.getMain();
              
-     		 
-             //Vector<MyCompletionProposal> list = new Vector();
+             String standinExpression = "null";
+             StringBuffer buf = new StringBuffer(doc.get());
+             CompilationUnit ast = EclipseUtil.compile(unit, unit
+                     .getJavaProject(), buf.toString().toCharArray(), 0);
+   
+             VariableParser varPar = new VariableParser();
+             varPar.getGlobals(unit);
+             
              Vector<SOCompletionProposal> list = new Vector();
              int cursorOffset = selectionOffset + selectionLength;
              IJavaProject javaProject = unit.getJavaProject();
@@ -223,7 +231,7 @@ public class Main {
             buf.replace(quackOffset, cursorOffset, standinExpression);
             CompilationUnit ast = EclipseUtil.compile(unit, unit
                     .getJavaProject(), buf.toString().toCharArray(), 0);
-
+            
             // work here
             UU.profile("ast build");
 
