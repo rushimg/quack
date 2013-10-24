@@ -124,7 +124,7 @@ public class Main {
                      .getJavaProject(), buf.toString().toCharArray(), 0);
    
              VariableParser varPar = new VariableParser();
-             varPar.getGlobals(unit);
+             varPar.top(unit);
              
              Vector<SOCompletionProposal> list = new Vector();
              int cursorOffset = selectionOffset + selectionLength;
@@ -166,7 +166,9 @@ public class Main {
                              .getProject(), rawResponses.get(i).getReplacementString(), quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
-                 }
+                //Something like this : ICompilationUnit newCU = (ICompilationUnit) rawResponses.get(i).getReplacementString();
+             }
+             	
                  return list;
              
          } catch (Throwable e) {
