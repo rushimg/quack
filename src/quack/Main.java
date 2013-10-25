@@ -18,7 +18,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -108,7 +110,7 @@ public class Main {
             IDocument doc, int selectionOffset, int selectionLength) {
      	try {
              lastProject = unit.getJavaProject().getProject();
-           
+            
              // work here
              UU.profileClear();
              UU.profile("all");
@@ -117,19 +119,11 @@ public class Main {
              UU.profile("part 1");
 
              Main main = Main.getMain();
-             
-             String standinExpression = "null";
-             StringBuffer buf = new StringBuffer(doc.get());
-             CompilationUnit ast = EclipseUtil.compile(unit, unit
-                     .getJavaProject(), buf.toString().toCharArray(), 0);
-   
-             VariableParser varPar = new VariableParser();
-             varPar.top(unit);
-             
+            
              Vector<SOCompletionProposal> list = new Vector();
              int cursorOffset = selectionOffset + selectionLength;
              IJavaProject javaProject = unit.getJavaProject();
-
+       
              // find the quack (keyword command)
              String quack;
              int quackOffset;
@@ -154,6 +148,19 @@ public class Main {
                      return list;
                  }
              }
+             
+             String standinExpression = "";
+             StringBuffer buf = new StringBuffer(doc.get());
+             buf.replace(quackOffset, cursorOffset, standinExpression);
+             CompilationUnit ast = EclipseUtil.compile(unit, unit
+                     .getJavaProject(), buf.toString().toCharArray(), 0);
+             //System.out.print(ast.toString());
+             
+             //TODO: get var types
+             //TODO: get vars from SO
+             VariableParser varPar = new VariableParser();
+             varPar.runParser(unit,ast);
+             
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
              log("API Call URL: "+ url.toString());
@@ -166,7 +173,6 @@ public class Main {
                              .getProject(), rawResponses.get(i).getReplacementString(), quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
-                //Something like this : ICompilationUnit newCU = (ICompilationUnit) rawResponses.get(i).getReplacementString();
              }
              	
                  return list;
@@ -177,7 +183,7 @@ public class Main {
          }
      }
     
-    public List<MyCompletionProposal> getCOMProposals(ICompilationUnit unit,
+   /* public List<MyCompletionProposal> getCOMProposals(ICompilationUnit unit,
            IDocument doc, int selectionOffset, int selectionLength) {
     	try {
             lastProject = unit.getJavaProject().getProject();
@@ -291,5 +297,5 @@ public class Main {
             throw new Error(e);
         }
     	
-    }
+    }*/
 }

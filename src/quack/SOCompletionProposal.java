@@ -46,7 +46,6 @@ public class SOCompletionProposal implements ICompletionProposal, IJavaCompletio
             IContextInformation contextInformation,
             String additionalProposalInfo, int relevance) {
         
-    	
     	Assert.isNotNull(replacementString);
         Assert.isTrue(replacementOffset >= 0);
         Assert.isTrue(replacementLength >= 0);

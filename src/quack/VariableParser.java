@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jdt.core.dom.AST;
@@ -88,7 +89,6 @@ public class VariableParser {
 		}
 		return "";
 	}
-	
 	public void getGlobals(ICompilationUnit unit){
 		try {
 			for (IType type : unit.getAllTypes()) { 
@@ -99,21 +99,18 @@ public class VariableParser {
 		} catch (JavaModelException e) {e.printStackTrace();}
 	}
 	
+	
 	public void parse(ICompilationUnit unit){
 		try{
 		IType type = unit.findPrimaryType();
 		IMethod[] methods = type.getMethods();
-		for(IMethod method : methods)
-		{ 
-		System.out.println("Method: " + method);
-		ASTParser parser = ASTParser.newParser(AST.JLS3); 
-		parser.setSource(unit);
-		parser.setSourceRange(method.getSourceRange().getOffset(), method.getSourceRange().getLength());
-		//parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
-		//parser.setSource(method.getSource().toCharArray());
-		//parser.setProject(method.getJavaProject()); 
-		parser.setResolveBindings(true);
-		final CompilationUnit cu = (CompilationUnit)parser.createAST(null);
+		for(IMethod method : methods) 
+			System.out.println("Method: " + method);
+		}
+		catch(JavaModelException e){ e.printStackTrace();} ;
+	} 
+	public void parseCU(CompilationUnit unit){
+		final CompilationUnit cu = unit;
 		cu.accept(new ASTVisitor() {
 			Set names = new HashSet();
 
@@ -122,9 +119,9 @@ public class VariableParser {
 			this.names.add(name.getIdentifier());
 			System.out.println("Declaration of '" + name + "' at line " +
 					cu.getLineNumber(name.getStartPosition()));
+			System.out.println(node.resolveBinding());
 			return false; // do not continue to avoid usage info
 			}
-
 			public boolean visit(SimpleName node) {
 			if (this.names.contains(node.getIdentifier())) {
 			System.out.println("Usage of '" + node + "' at line " +
@@ -132,31 +129,14 @@ public class VariableParser {
 			}
 			return true;
 			}
-		}); 
-		}
-		}
-		catch(JavaModelException e){ e.printStackTrace();} 
-		//return cu;
+		});
 	} 
-		
-		//System.out.print(cUnit.);
 	
-	public void top(ICompilationUnit unit){
-		//CompilationUnit cUnit = 
+	public void runParser(ICompilationUnit unit, CompilationUnit cu){
 		this.parse(unit);
-		//ASTVisitor visitor = new ASTVisitor();
-		//System.out.print(cUnit.getProblems());
-		//cUnit.
-		//System.out.print(cUnit);
+		this.parseCU(cu);
 	}
-	/*StringBuffer buf = new StringBuffer(doc.get());
-    CompilationUnit ast = EclipseUtil.compile(unit, unit
-            .getJavaProject(), buf.toString().toCharArray(), 0);
-    Model model = modelCache.getModel(unit, ast);
-    model.createTypeList();
-    System.out.print(model.genericToParameterized);
-    System.out.print(model.processedTypes);*/
-    // This gets all the global vars and methods
-	
-	
+
 }
+	
+	
