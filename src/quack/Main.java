@@ -165,18 +165,20 @@ public class Main {
              log("API Call URL: "+ url.toString());
              String raw_text = sof.httpGetSO(url);
              Vector<ResponseObj> rawResponses =  sof.processJSON(raw_text);
+             List<List<String>> soVects  = new Vector<List<String>>();
              
              for(int i=0; i< rawResponses.size(); i++){
-
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
                              .getProject(), rawResponses.get(i).getReplacementString(), quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
                  	
-                   //varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
+                 	 soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
+             
+             varPar.printListOFLists(soVects);
              	
-                 return list;
+             return list;
              
          } catch (Throwable e) {
              log("Main.java(at end)", e);
