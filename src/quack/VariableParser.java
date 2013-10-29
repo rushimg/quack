@@ -20,9 +20,11 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
 import sun.font.CreatedFontTracker;
@@ -32,111 +34,124 @@ import com.sun.xml.internal.ws.org.objectweb.asm.MethodVisitor;
 import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 public class VariableParser {
-	
+
 	public Map<String, String> varMap;
-	
+
 	public VariableParser() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void parse(String inputCode){
-		BufferedReader bufReader = new BufferedReader(new StringReader(inputCode));
-		String line=null;
+	public void getGlobals(ICompilationUnit unit) {
 		try {
-			while( (line=bufReader.readLine()) != null )
-			{
-				line = this.cleanString(line);
-				//Simple Ones (primitives)
-				/*if (line.indexOf("int") != -1)
-					System.out.println(line);
-				else if (line.indexOf("char") != -1)
-					System.out.println(line);
-				else*/
-				this.getInstances(line);
-				//More complex ones (objects)
-			}
-		} catch (IOException e) { e.printStackTrace();}
-		
-		//System.out.println(inputCode);
-	}
-	
-	private String cleanString(String unCleanString){
-		//repalce with space
-		String cleanerUnCleanString = "";
-		//cleanerUnCleanString = unCleanString.replace(")", " ");
-		cleanerUnCleanString = unCleanString.replace(")", " ");
-		cleanerUnCleanString = cleanerUnCleanString.replace("(", " ");
-		cleanerUnCleanString = cleanerUnCleanString.replace("]"," ");
-		cleanerUnCleanString = cleanerUnCleanString.replace("["," ");
-		cleanerUnCleanString = cleanerUnCleanString.replace(","," ");
-		//replace with nothing
-		cleanerUnCleanString = cleanerUnCleanString.replace("\"","");
-		cleanerUnCleanString = cleanerUnCleanString.replace("\'","");
-		return cleanerUnCleanString;
-	}
-	
-	private String getInstances(String line){
-		// idea here is that java programs follow the typical format ClassName instanceName
-		String[] spaces = line.split(" ");
-		for(int i=0; i< spaces.length-1 ; i++){
-			if ((spaces[i].length() > 0) && (spaces[i+1].length() > 0)){
-				//TODO: add in all primitive types
-				if (Character.isUpperCase(spaces[i].charAt(0)) || "int".equals(spaces[i])){
-					if (Character.isLowerCase(spaces[i+1].charAt(0)))
-						System.out.println(spaces[i] + " " + spaces[i+1]);
+			for (IType type : unit.getAllTypes()) {
+				for (IField ifield : type.getFields()) {
+					System.out.println("iField " + ifield);
 				}
 			}
+		} catch (JavaModelException e) {
+			e.printStackTrace();
 		}
-		return "";
 	}
-	public void getGlobals(ICompilationUnit unit){
+
+	public void parse(ICompilationUnit unit) {
 		try {
-			for (IType type : unit.getAllTypes()) { 
-			 for (IField ifield : type.getFields()) { 
-				 System.out.println("iField "+ifield);
-			 }
-			}
-		} catch (JavaModelException e) {e.printStackTrace();}
-	}
-	
-	
-	public void parse(ICompilationUnit unit){
-		try{
-		IType type = unit.findPrimaryType();
-		IMethod[] methods = type.getMethods();
-		for(IMethod method : methods) 
-			System.out.println("Method: " + method);
+			IType type = unit.findPrimaryType();
+			IMethod[] methods = type.getMethods();
+			for (IMethod method : methods)
+				System.out.println("Method: " + method);
+		} catch (JavaModelException e) {
+			e.printStackTrace();
 		}
-		catch(JavaModelException e){ e.printStackTrace();} ;
-	} 
-	public void parseCU(CompilationUnit unit){
+		;
+	}
+
+	public void parseCU(CompilationUnit unit) {
 		final CompilationUnit cu = unit;
 		cu.accept(new ASTVisitor() {
 			Set names = new HashSet();
 
 			public boolean visit(VariableDeclarationFragment node) {
-			SimpleName name = node.getName();
-			this.names.add(name.getIdentifier());
-			System.out.println("Declaration of '" + name + "' at line " +
-					cu.getLineNumber(name.getStartPosition()));
-			System.out.println(node.resolveBinding());
-			return false; // do not continue to avoid usage info
+				SimpleName name = node.getName();
+				this.names.add(name.getIdentifier());
+				System.out.println("Declaration of '" + name + "' at line "
+						+ cu.getLineNumber(name.getStartPosition()));
+				System.out.println(name.resolveBinding());
+				return false; // do not continue to avoid usage info
 			}
+
 			public boolean visit(SimpleName node) {
-			if (this.names.contains(node.getIdentifier())) {
-			System.out.println("Usage of '" + node + "' at line " +
-			cu.getLineNumber(node.getStartPosition()));
-			}
-			return true;
+				if (this.names.contains(node.getIdentifier())) {
+					System.out.println("Usage of '" + node + "' at line "
+							+ cu.getLineNumber(node.getStartPosition()));
+				}
+				return true;
 			}
 		});
-	} 
+	}
 	
-	public void runParser(ICompilationUnit unit, CompilationUnit cu){
+	/*private CompilationUnit getCU(ICompilationUnit unit, int quackOffset, int cursorOffset) {
+		 ASTParser parser = ASTParser.newParser(AST.JLS3);
+		 parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		 parser.setSource(unit);
+		 parser.setResolveBindings(true);
+		 parser.setBindingsRecovery(true);
+		 CompilationUnit compiUnit = (CompilationUnit) parser.createAST(null);
+		 System.out.print(compiUnit.toString());
+		 String standinExpression = "";
+         StringBuffer buf = new StringBuffer(compiUnit.toString());
+         buf.replace(quackOffset, cursorOffset, standinExpression);
+         CompilationUnit ast = EclipseUtil.compile(unit, unit
+                 .getJavaProject(), buf.toString().toCharArray(), 0);
+        // System.out.print(ast.toString());
+		 return compiUnit;
+	}*/
+
+	public void runParser(ICompilationUnit unit,CompilationUnit ast) {
 		this.parse(unit);
-		this.parseCU(cu);
+		this.parseCU(ast);
 	}
 
+	
+	public void parseSO(ICompilationUnit unit , String repString) {
+		this.addClass(unit, repString);
+		this.addMethod(unit, repString);
+	}
+	
+	private void addMethod(ICompilationUnit unit ,String repString){
+		String methString = "public class SO { public void run(){ " + repString + " } }";
+		this.printParsed(unit, methString);
+	}
+	
+	private CompilationUnit createCU(String rawCode){
+		 Document doc = new Document(rawCode);
+		 ASTParser parser = ASTParser.newParser(AST.JLS3);
+		 parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		 parser.setSource(doc.get().toCharArray());
+		
+		 parser.setResolveBindings(true);
+		 parser.setBindingsRecovery(true);
+		 //parser.setBindingsRecovery(true);
+		 CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+		 return cu;
+		 /*cu.recordModifications();
+		 AST ast = cu.getAST();
+		 ImportDeclaration id = ast.newImportDeclaration();
+		 id.setName(ast.newName(new String[] {"java", "util", "Set"});
+		 cu.imports().add(id); // add import declaration at end
+		 TextEdit edits = cu.rewrite(document, null);
+		 UndoEdit undo = edits.apply(document);*/
+	}
+	private void addClass(ICompilationUnit unit , String repString){
+		String classString = "public class SO { " + repString + "}";
+		this.printParsed(unit, classString);
+	}
+	
+	private void printParsed(ICompilationUnit unit , String addString){
+		//CompilationUnit ast = this.createCU(addString);
+		StringBuffer buf = new StringBuffer(addString);
+		CompilationUnit ast = EclipseUtil.compile(unit, unit.getJavaProject(),
+		buf.toString().toCharArray(), 0);
+		System.out.print(ast.toString());
+		this.parseCU(ast);
+	}
 }
-	
-	
