@@ -120,7 +120,7 @@ public class Main {
 
              Main main = Main.getMain();
             
-             Vector<SOCompletionProposal> list = new Vector();
+             Vector<SOCompletionProposal> list = new Vector<SOCompletionProposal>();
              int cursorOffset = selectionOffset + selectionLength;
              IJavaProject javaProject = unit.getJavaProject();
        
@@ -156,9 +156,9 @@ public class Main {
                      .getJavaProject(), buf.toString().toCharArray(), 0);
              //System.out.print(ast.toString());
              
-             //TODO: get vars from SO
              VariableParser varPar = new VariableParser();
-             //varPar.runParser(unit,ast);
+             List<String> originalVars = varPar.runParser(unit,ast);
+             varPar.printList(originalVars);
              
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
@@ -173,7 +173,7 @@ public class Main {
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
                  	
-                    varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
+                   //varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
              }
              	
                  return list;

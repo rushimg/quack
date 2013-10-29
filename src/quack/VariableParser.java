@@ -4,12 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.accessibility.AccessibleTextSequence;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -30,15 +33,21 @@ import org.eclipse.text.edits.TextEdit;
 import sun.font.CreatedFontTracker;
 
 import com.sun.org.apache.xpath.internal.operations.And;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion.Static;
 import com.sun.xml.internal.ws.org.objectweb.asm.MethodVisitor;
 import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 public class VariableParser {
-
-	public Map<String, String> varMap;
-
+	protected List<String> originalVars;
+	public static List<String> tempVars = new Vector<String>();
+	
 	public VariableParser() {
-		// TODO Auto-generated constructor stub
+		this.originalVars = new Vector<String>();
+	}
+	
+	public void printList(List<String> vars){
+		for (String e : vars)
+			System.out.println(e);
 	}
 
 	public void getGlobals(ICompilationUnit unit) {
@@ -57,36 +66,44 @@ public class VariableParser {
 		try {
 			IType type = unit.findPrimaryType();
 			IMethod[] methods = type.getMethods();
-			for (IMethod method : methods)
-				System.out.println("Method: " + method);
+			for (IMethod method : methods){
+				String temp = "Method: " + method.toString();
+				this.originalVars.add(temp);
+			}
+				//System.out.println("Method: " + method);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
-		;
 	}
 
 	public void parseCU(CompilationUnit unit) {
 		final CompilationUnit cu = unit;
+		
 		cu.accept(new ASTVisitor() {
 			Set names = new HashSet();
-
 			public boolean visit(VariableDeclarationFragment node) {
 				SimpleName name = node.getName();
+				
 				this.names.add(name.getIdentifier());
-				System.out.println("Declaration of '" + name + "' at line "
+				VariableParser.tempVars.add("Declaration of '" + name + "' at line "
 						+ cu.getLineNumber(name.getStartPosition()));
-				System.out.println(name.resolveBinding());
+				VariableParser.tempVars.add(name.resolveBinding().toString());
 				return false; // do not continue to avoid usage info
 			}
 
 			public boolean visit(SimpleName node) {
 				if (this.names.contains(node.getIdentifier())) {
-					System.out.println("Usage of '" + node + "' at line "
+					VariableParser.tempVars.add("Usage of '" + node + "' at line "
 							+ cu.getLineNumber(node.getStartPosition()));
 				}
 				return true;
 			}
+			
 		});
+		for (String e : VariableParser.tempVars)
+			this.originalVars.add(e);
+		VariableParser.tempVars = null;
+		
 	}
 	
 	/*private CompilationUnit getCU(ICompilationUnit unit, int quackOffset, int cursorOffset) {
@@ -106,13 +123,15 @@ public class VariableParser {
 		 return compiUnit;
 	}*/
 
-	public void runParser(ICompilationUnit unit,CompilationUnit ast) {
+	public List<String> runParser(ICompilationUnit unit,CompilationUnit ast) {
 		this.parse(unit);
 		this.parseCU(ast);
+		return this.originalVars;
 	}
 
 	
 	public void parseSO(ICompilationUnit unit , String repString) {
+		this.getImports(unit);
 		this.addClass(unit, repString);
 		this.addMethod(unit, repString);
 	}
@@ -122,7 +141,7 @@ public class VariableParser {
 		this.printParsed(unit, methString);
 	}
 	
-	private CompilationUnit createCU(String rawCode){
+	/*private CompilationUnit createCU(String rawCode){
 		 Document doc = new Document(rawCode);
 		 ASTParser parser = ASTParser.newParser(AST.JLS3);
 		 parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -132,15 +151,16 @@ public class VariableParser {
 		 parser.setBindingsRecovery(true);
 		 //parser.setBindingsRecovery(true);
 		 CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+		 System.out.print(cu.toString());
 		 return cu;
-		 /*cu.recordModifications();
+		 cu.recordModifications();
 		 AST ast = cu.getAST();
 		 ImportDeclaration id = ast.newImportDeclaration();
 		 id.setName(ast.newName(new String[] {"java", "util", "Set"});
 		 cu.imports().add(id); // add import declaration at end
 		 TextEdit edits = cu.rewrite(document, null);
-		 UndoEdit undo = edits.apply(document);*/
-	}
+		 UndoEdit undo = edits.apply(document);
+	}*/
 	private void addClass(ICompilationUnit unit , String repString){
 		String classString = "public class SO { " + repString + "}";
 		this.printParsed(unit, classString);
@@ -153,5 +173,14 @@ public class VariableParser {
 		buf.toString().toCharArray(), 0);
 		System.out.print(ast.toString());
 		this.parseCU(ast);
+	}
+	
+	private void getImports(ICompilationUnit unit){
+		try{
+		for (IImportDeclaration I : unit.getImports()) {
+			
+			System.out.println(I.toString());
+		}
+		} catch (JavaModelException e) {e.printStackTrace();}
 	}
 }
