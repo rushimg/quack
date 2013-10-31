@@ -25,7 +25,8 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 public class Walker {
     public List<String> guesses = null;
-
+    public Set<ITypeBinding> typesInfo = null;
+    
     public ASTNode getTheNodeWeWant(CompilationUnit n, final int nodeOffset) {
         class MyASTVisitor extends ASTVisitor {
             ASTNode nodeWeWant = null;
@@ -33,8 +34,7 @@ public class Walker {
             public void preVisit(ASTNode node) {
 
                 // work here
-                // System.out.println("======: " + node.getClass() + " :: " +
-                // node);
+               // System.out.println("======: " + node.getClass() + " :: " + node);
 
                 if (node.getStartPosition() >= nodeOffset) {
                     if (node instanceof NullLiteral) {
@@ -56,6 +56,7 @@ public class Walker {
 
     public void getParents(ASTNode node, Set<ASTNode> parents,
             Set<ITypeBinding> types) {
+    	if (node != null){
         ASTNode parent = node.getParent();
         if (parent != null) {
             parents.add(parent);
@@ -66,6 +67,9 @@ public class Walker {
             }
             getParents(parent, parents, types);
         }
+        this.typesInfo=(types);
+    	}
+       // System.out.println(types.toString());
     }
 
     public Walker(final CompilationUnit n, final Model model,

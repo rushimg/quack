@@ -148,17 +148,42 @@ public class Main {
                      return list;
                  }
              }
-             
-             String standinExpression = "";
+             UU.profile("model");
+             String standinExpression = "null";
              StringBuffer buf = new StringBuffer(doc.get());
              buf.replace(quackOffset, cursorOffset, standinExpression);
              CompilationUnit ast = EclipseUtil.compile(unit, unit
                      .getJavaProject(), buf.toString().toCharArray(), 0);
              //System.out.print(ast.toString());
              
+             Model model = modelCache.getModel(unit, ast);
+                 model.processTypesForAST(ast);
+
+                 // work here
+                 UU.profile("model");
+
+                 // work here
+                 UU.profile("count funcs");
+
+                 // work here
+                 Bag<String> functionCallCounts = new Bag();
+                 EclipseUtil.countCallsToDifferentMethodsAndFields(ast,
+                         functionCallCounts);
+
+                 // work here
+                 UU.profile("count funcs");
+
+                 // work here
+                 UU.profile("walker{}");
+                 Ident quackIdent = new Ident(quack);
+                 model.functionCallCounts = functionCallCounts;
+                 Deslopper d = new Deslopper();
+                 Walker w = new Walker(ast, model, quackOffset, quackIdent, d);
+                 System.out.print(w.typesInfo);
+         
              VariableParser varPar = new VariableParser();
-             List<String> originalVars = varPar.runParser(unit,ast);
-            //varPar.printList(originalVars);
+             //List<String> originalVars = varPar.runParser(unit,ast);
+             //varPar.printList(originalVars);
              
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
@@ -168,15 +193,35 @@ public class Main {
              List<List<String>> soVects  = new Vector<List<String>>();
              
              for(int i=0; i< rawResponses.size(); i++){
+            		String replacementString = rawResponses.get(i).getReplacementString();
+            		
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
-                             .getProject(), rawResponses.get(i).getReplacementString(), quackOffset, quack.length(),
+                             .getProject(), replacementString, quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
+                 
+                   
+                    //String standinExpression2 = "null";
+                    StringBuffer buf2 = new StringBuffer(doc.get());
+                    buf2.replace(quackOffset, (quackOffset+replacementString.length()-1), replacementString);
+                    CompilationUnit ast2 = EclipseUtil.compile(unit, unit
+                            .getJavaProject(), buf2.toString().toCharArray(), 0);
+                   // System.out.println(ast2);
+                    
+                    Model model2 = modelCache.getModel(unit, ast2);
+                    model.processTypesForAST(ast2);
+                    Bag<String> functionCallCounts2 = new Bag();
+                    EclipseUtil.countCallsToDifferentMethodsAndFields(ast2,
+                            functionCallCounts2);
+                    model.functionCallCounts = functionCallCounts2;
+                    Deslopper d2 = new Deslopper();
+                    Walker w2 = new Walker(ast2, model2, quackOffset, quackIdent, d2);
+                    System.out.print(w2.typesInfo);
                  	
-                 	 soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
+                    //soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
              
-            // varPar.printListOFLists(soVects);
+            //varPar.printListOFLists(soVects);
              	
              return list;
              
