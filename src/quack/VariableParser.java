@@ -82,8 +82,8 @@ public class VariableParser {
 				this.names.add(name.getIdentifier());
 				VariableParser.tempVars.add("Declaration of '" + name + "' at line "
 						+ cu.getLineNumber(name.getStartPosition()));
-				if (name.resolveBinding() != null){
-					VariableParser.tempVars.add(name.resolveBinding().toString());
+				if (node.resolveBinding() != null){
+					VariableParser.tempVars.add(node.resolveBinding().toString());
 				}
 				return false; // do not continue to avoid usage info
 			}
