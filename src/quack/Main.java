@@ -158,7 +158,7 @@ public class Main {
              
              VariableParser varPar = new VariableParser();
              List<String> originalVars = varPar.runParser(unit,ast);
-             varPar.printList(originalVars);
+            //varPar.printList(originalVars);
              
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
@@ -176,7 +176,7 @@ public class Main {
                  	 soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
              
-             varPar.printListOFLists(soVects);
+            // varPar.printListOFLists(soVects);
              	
              return list;
              

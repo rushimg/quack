@@ -167,6 +167,7 @@ public class VariableParser {
 	}
 	
 	private List<String> printParsed(ICompilationUnit unit , String addString){
+		//addString = this.getImports(unit) + '\n' + addString;
 		//CompilationUnit ast = this.createCU(addString);
 		StringBuffer buf = new StringBuffer(addString);
 		CompilationUnit ast = EclipseUtil.compile(unit, unit.getJavaProject(),
@@ -175,13 +176,14 @@ public class VariableParser {
 		return this.parseCU_SO(ast);
 	}
 	
-	private void getImports(ICompilationUnit unit){
+	private String getImports(ICompilationUnit unit){
+		String retString = null;
 		try{
 		for (IImportDeclaration I : unit.getImports()) {
-			
-			System.out.println(I.toString());
+			retString =  (I.toString());
 		}
 		} catch (JavaModelException e) {e.printStackTrace();}
+		return retString;
 	}
 	
 	/*private CompilationUnit getCU(ICompilationUnit unit, int quackOffset, int cursorOffset) {
