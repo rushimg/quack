@@ -6,8 +6,7 @@ public class ResponseObj {
 	
 	private String replacementString = null;
 	
-	public ResponseObj() {
-		
+	public ResponseObj() {	
 	}
 	
 	public void setDisplayString(String in){

@@ -89,11 +89,14 @@ public class SOFunctions {
 	
 	public URL createURL(String quack){
 		String temp = quack.replaceAll(" ", "%20");
-		String strUrl = "http://api.stackexchange.com/2.1/search?order=desc&sort=activity&tagged=java&intitle="
+		//added not-tagged : android to remove answers pertaining to andriod programming and php etc. 
+		String strUrl = "http://api.stackexchange.com/2.1/search?order=desc&sort=activity&nottagged=android;php;javascript&tagged=java;&intitle="
 				+ temp
 				//+ "&site=stackoverflow&filter=!--iqJbOieOg3";
 				+ "&site=stackoverflow&filter=!)Rw3Mkmi9q6VhQg9UATQwQa(";
 		URL url = null;
+		
+		
 		try {
 			url = new URL(strUrl);
 		} catch (MalformedURLException e) { e.printStackTrace();}

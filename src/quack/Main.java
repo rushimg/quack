@@ -156,8 +156,8 @@ public class Main {
                      .getJavaProject(), buf.toString().toCharArray(), 0);
              //System.out.print(ast.toString());
              
-             Model model = modelCache.getModel(unit, ast);
-                 model.processTypesForAST(ast);
+             //Model model = modelCache.getModel(unit, ast);
+               //  model.processTypesForAST(ast);
 
                  // work here
                  UU.profile("model");
@@ -167,8 +167,8 @@ public class Main {
 
                  // work here
                  
-               /*
-                * Parser Types using walker
+               
+                // Parser Types using walker
                  Bag<String> functionCallCounts = new Bag();
                  EclipseUtil.countCallsToDifferentMethodsAndFields(ast,
                          functionCallCounts);
@@ -179,14 +179,15 @@ public class Main {
                  // work here
                  UU.profile("walker{}");
                  Ident quackIdent = new Ident(quack);
-                 model.functionCallCounts = functionCallCounts;
+                // model.functionCallCounts = functionCallCounts;
                  Deslopper d = new Deslopper();
-                 Walker w = new Walker(ast, model, quackOffset, quackIdent, d);
-                 System.out.print(w.typesInfo);*/
+                 //Walker w = new Walker(ast, model, quackOffset, quackIdent, d);
+                // System.out.print(w.typesInfo);
          
              VariableParser varPar = new VariableParser();
              List<String> originalVars = varPar.runParser(unit,ast);
              varPar.printList(originalVars);
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
              
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
@@ -209,22 +210,26 @@ public class Main {
                             .getJavaProject(), buf2.toString().toCharArray(), 0);
                    // System.out.println(ast2);
                     
-                   /*
-                    * Type Parser using walker
+                   
+                   // Type Parser using walker
                     Model model2 = modelCache.getModel(unit, ast2);
-                    model.processTypesForAST(ast2);
+                    model2.processTypesForAST(ast2);
                     Bag<String> functionCallCounts2 = new Bag();
                     EclipseUtil.countCallsToDifferentMethodsAndFields(ast2,
                             functionCallCounts2);
-                    model.functionCallCounts = functionCallCounts2;
+                    model2.functionCallCounts = functionCallCounts2;
                     Deslopper d2 = new Deslopper();
                     Walker w2 = new Walker(ast2, model2, quackOffset, quackIdent, d2);
-                    //System.out.print(w2.typesInfo);*/
-                 	
-                    soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
+                    System.out.println("types from ast");
+                    System.out.println(w2.typesInfo);
+                    System.out.println("rep string");
+              //      soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
+                    System.out.println(rawResponses.get(i).getReplacementString());
+                    varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
+                    //varPar.printList(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
              
-            varPar.printListOFLists(soVects);
+           // varPar.printListOFLists(soVects);
              	
              return list;
              

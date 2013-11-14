@@ -1,41 +1,22 @@
 package quack;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.accessibility.AccessibleTextSequence;
-
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IImportDeclaration;
-import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jface.text.Document;
-import org.eclipse.text.edits.TextEdit;
-
-import sun.font.CreatedFontTracker;
-
-import com.sun.org.apache.xpath.internal.operations.And;
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion.Static;
-import com.sun.xml.internal.ws.org.objectweb.asm.MethodVisitor;
-import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 public class VariableParser {
 	protected List<String> originalVars;
@@ -51,6 +32,7 @@ public class VariableParser {
 	public void printList(List<String> vars){
 		for (String e : vars)
 			System.out.println(e);
+		    System.out.println();
 	}
 	
 	public void printListOFLists(List<List<String>> vars){
@@ -58,15 +40,15 @@ public class VariableParser {
 			this.printList(e);
 	}
 
-	public void parse(ICompilationUnit unit) {
+	public void parseMethods(ICompilationUnit unit) {
 		try {
-			IType type = unit.findPrimaryType();
+			IType type = (unit).findPrimaryType();
 			IMethod[] methods = type.getMethods();
 			for (IMethod method : methods){
 				String temp = "Method: " + method.toString();
 				this.originalVars.add(temp);
+				System.out.println("Method: " + temp);
 			}
-				//System.out.println("Method: " + method);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
@@ -76,7 +58,7 @@ public class VariableParser {
 		final CompilationUnit cu = unit;
 		
 		cu.accept(new ASTVisitor() {
-			Set names = new HashSet();
+			Set<String> names = new HashSet<String>();
 			public boolean visit(VariableDeclarationFragment node) {
 				SimpleName name = node.getName();
 				this.names.add(name.getIdentifier());
@@ -101,12 +83,43 @@ public class VariableParser {
 		for (String e : VariableParser.tempVars)
 			this.originalVars.add(e);		
 	}
+	public void test(CompilationUnit unit){
+		//unit.compile
+		 ICompilationUnit compilationUnit = (ICompilationUnit)unit;
+		  try
+	        {
+
+	            IType type = compilationUnit.findPrimaryType();
+	            IMethod[] methods = type.getMethods();
+	            for(IMethod method : methods)
+	            {                
+	            	System.out.print("method: " + method.toString());
+	                /*ASTParser parser = ASTParser.newParser(AST.JLS3);                
+	                parser.setSource(compilationUnit);
+	                parser.setSourceRange(method.getSourceRange().getOffset(), method.getSourceRange().getLength());
+	                //parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
+	                //parser.setSource(method.getSource().toCharArray());
+	                //parser.setProject(method.getJavaProject());                
+	                parser.setResolveBindings(true);
+	                CompilationUnit cu = (CompilationUnit)parser.createAST(null);
+	                cu.accept(new ASTMethodVisitor());*/
+
+	                // If the visitor visit the right VariableDeclarationFragment,
+	                // then the right IMethod is the current 'method' variable
+
+	            }                        
+	        }
+	        catch(JavaModelException e)
+	        {         
+	            e.printStackTrace();
+	        }         
+	}
 	
 	public List<String> parseCU_SO(CompilationUnit unit) {
 		final CompilationUnit cu = unit;
-		
+		//IType type = ( (ICompilationUnit)unit).findPrimaryType();
 		cu.accept(new ASTVisitor() {
-			Set names = new HashSet();
+			Set<String> names = new HashSet<String>();
 			public boolean visit(VariableDeclarationFragment node) {
 				SimpleName name = node.getName();
 				this.names.add(name.getIdentifier());
@@ -135,6 +148,7 @@ public class VariableParser {
 		for(int i = 0; i <VariableParser.tempVars2.size();i++){
 				VariableParser.tempVars2.remove(i--);
 		}
+		
 		return retList;
 		/*for (String e : VariableParser.tempVars2){
 			VariableParser.tempVars2.remove(e);
@@ -143,36 +157,40 @@ public class VariableParser {
 	}
 
 	public List<String> runParser(ICompilationUnit unit,CompilationUnit ast) {
-		this.parse(unit);
+		this.parseMethods(unit);
 		this.parseCU(ast);
 		return this.originalVars;
 	}
 	
 	public  List<String> parseSO(ICompilationUnit unit , String repString) {
-		//this.getImports(unit);
+	//	this.parseMethods(repString);
 		List<String> retString = new Vector<String>();
 		retString = this.addClass(unit, repString);
 		retString.addAll(this.addMethod(unit, repString));
 		return retString;
 	}
 	
+	/*private List<String> addClean(ICompilationUnit unit, String repString){
+		String meth =  
+	}*/
 	private List<String> addMethod(ICompilationUnit unit ,String repString){
-		String methString = "public class SO { public void run(){ " + repString + " } }";
+		String methString = "public class SO { \n public void run(){ \n " + repString + " \n } \n }";
 		return this.printParsed(unit, methString);
 	}
 	
 	private List<String> addClass(ICompilationUnit unit , String repString){
-		String classString = "public class SO { " + repString + "}";
+		String classString = "public class SO { \n " + repString + " \n }";
 		return this.printParsed(unit, classString);
 	}
 	
 	private List<String> printParsed(ICompilationUnit unit , String addString){
-		//addString = this.getImports(unit) + '\n' + addString;
+		addString = this.getImports(unit) + '\n' + addString;
 		//CompilationUnit ast = this.createCU(addString);
 		StringBuffer buf = new StringBuffer(addString);
 		CompilationUnit ast = EclipseUtil.compile(unit, unit.getJavaProject(),
 		buf.toString().toCharArray(), 0);
 		//System.out.print(ast.toString());
+		//this.test(ast);
 		return this.parseCU_SO(ast);
 	}
 	
