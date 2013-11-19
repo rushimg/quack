@@ -33,9 +33,6 @@ public class Walker {
 
             public void preVisit(ASTNode node) {
 
-                // work here
-               // System.out.println("======: " + node.getClass() + " :: " + node);
-
                 if (node.getStartPosition() >= nodeOffset) {
                     if (node instanceof NullLiteral) {
                         nodeWeWant = node;
@@ -73,7 +70,7 @@ public class Walker {
     }
 
     public Walker(final CompilationUnit n, final Model model,
-            final int nodeOffset, final Ident quack, final Deslopper d) {
+        final int nodeOffset, final Ident quack, final Deslopper d) {
 
         final int originalTypeCount = model.keyToType.size();
         final ASTNode desiredNode = getTheNodeWeWant(n, nodeOffset);
@@ -193,6 +190,7 @@ public class Walker {
                                 && !typesToDesiredNode.contains(child)) {
                             model.processType_local_addConstructors(child,
                                     "#local");
+                            //model.funcGroups.toString();
                         }
                     }
 
@@ -288,7 +286,7 @@ public class Walker {
                     Main.getMain().log("desired type: " + returnType);
 
                     // if we added any new types,
-                    // recomputer the type list
+                    // recompute the type list
                     if (model.keyToType.size() > originalTypeCount) {
                         model.createTypeList();
                     }

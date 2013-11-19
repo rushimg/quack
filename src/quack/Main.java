@@ -209,10 +209,10 @@ public class Main {
                     CompilationUnit ast2 = EclipseUtil.compile(unit, unit
                             .getJavaProject(), buf2.toString().toCharArray(), 0);
                    // System.out.println(ast2);
-                    
+                    varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
                    
                    // Type Parser using walker
-                    Model model2 = modelCache.getModel(unit, ast2);
+                   /* Model model2 = modelCache.getModel(unit, ast2);
                     model2.processTypesForAST(ast2);
                     Bag<String> functionCallCounts2 = new Bag();
                     EclipseUtil.countCallsToDifferentMethodsAndFields(ast2,
@@ -225,7 +225,7 @@ public class Main {
                     System.out.println("rep string");
               //      soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
                     System.out.println(rawResponses.get(i).getReplacementString());
-                    varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
+                    */
                     //varPar.printList(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
              
