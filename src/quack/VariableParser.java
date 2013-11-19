@@ -28,12 +28,15 @@ import org.eclipse.jface.text.Document;
 public class VariableParser {
 	protected List<String> originalVars;
 	protected List<String> soVars;
+	protected List<String> soMethds;
 	protected static List<String> tempVars = new Vector<String>();
 	protected static List<String> tempVars2 = new Vector<String>();
-
+	protected static List<String> tempMethds = new Vector<String>();
+	
 	public VariableParser() {
 		this.originalVars = new Vector<String>();
 		this.soVars = new Vector<String>();
+		this.soMethds = new Vector<String>();
 	}
 
 	public void printList(List<String> vars) {
@@ -46,7 +49,7 @@ public class VariableParser {
 		for (List<String> e : vars)
 			this.printList(e);
 	}
-
+	/*
 	public void parseMethods(ICompilationUnit unit) {
 		try {
 			IType type = unit.findPrimaryType();
@@ -60,7 +63,7 @@ public class VariableParser {
 			e.printStackTrace();
 		}
 	}
-
+	*/
 	public void parseCU(CompilationUnit unit) {
 		final CompilationUnit cu = unit;
 		cu.accept(new ASTVisitor() {
@@ -69,10 +72,10 @@ public class VariableParser {
 			public boolean visit(VariableDeclarationFragment node) {
 				SimpleName name = node.getName();
 				this.names.add(name.getIdentifier());
-				VariableParser.tempVars.add("Declaration of '" + name
+				/*VariableParser.tempVars.add("Declaration of '" + name
 						+ "' at line "
-						+ cu.getLineNumber(name.getStartPosition()));
-
+						+ cu.getLineNumber(name.getStartPosition()));*/
+				
 				if (node.resolveBinding() != null) {
 					
 					VariableParser.tempVars.add(node.resolveBinding()
@@ -81,14 +84,14 @@ public class VariableParser {
 				return false; // do not continue to avoid usage info
 			}
 
-			public boolean visit(SimpleName node) {
+			/*public boolean visit(SimpleName node) {
 				if (this.names.contains(node.getIdentifier())) {
 					VariableParser.tempVars.add("Usage of '" + node
 							+ "' at line "
 							+ cu.getLineNumber(node.getStartPosition()));
 				}
 				return true;
-			}
+			}*/
 
 		});
 
@@ -127,32 +130,43 @@ public class VariableParser {
 		}
 	}*/
 
-	public void getMethods(CompilationUnit unit){
+	public List<String> getMethods(CompilationUnit unit){
 		final CompilationUnit cu = unit;
 		cu.accept(new ASTVisitor() {
             public boolean visit(final MethodDeclaration node) {
-            	System.out.println("declaring method '" + node.getName() + "' that returns " + node.getReturnType2());
+            	//System.out.println("declaring method: " + node.getName());
+            	VariableParser.tempMethds.add(node.getName().toString());
+            	//System.out.println("returns type: " + node.getReturnType2());
+            	VariableParser.tempMethds.add(node.getReturnType2().toString());
                 List<String> parameters = new ArrayList<String>();
                 for (Object parameter : node.parameters()) {
                     VariableDeclaration variableDeclaration = (VariableDeclaration) parameter;
-                    String type = variableDeclaration.getStructuralProperty(SingleVariableDeclaration.TYPE_PROPERTY)
-                            .toString();
+                    String type = variableDeclaration.getStructuralProperty(SingleVariableDeclaration.TYPE_PROPERTY).
+                            toString();
                     for (int i = 0; i < variableDeclaration.getExtraDimensions(); i++) {
                         type += "[]";
                     }
-                    parameters.add(type);
+                    VariableParser.tempMethds.add(type);
+                    //parameters.add(type);
                 }
-
-                System.out.println(parameters);
+                //System.out.println("input params: " + parameters.toString());
             
                 return true;
             }});
+		List<String> retList = new Vector<String>();
+		for (String e : VariableParser.tempMethds) {
+			retList.add(e);
+		}
+
+		for (int i = 0; i < VariableParser.tempMethds.size(); i++) {
+			VariableParser.tempMethds.remove(i--);
+		}
+
+		return retList;
 	}
             
 	public List<String> parseCU_SO(CompilationUnit unit) {
 		final CompilationUnit cu = unit;
-		// IType type = ( (ICompilationUnit)unit).findPrimaryType();
-		// cu.accept();
 		cu.accept(new ASTVisitor() {
 			Set<String> names = new HashSet<String>();
 			public boolean visit(VariableDeclarationFragment node) {
@@ -194,11 +208,6 @@ public class VariableParser {
 		}
 
 		return retList;
-		/*
-		 * for (String e : VariableParser.tempVars2){
-		 * VariableParser.tempVars2.remove(e); }
-		 */
-
 	}
 
 	public List<String> runParser(ICompilationUnit unit, CompilationUnit ast) {
@@ -214,11 +223,6 @@ public class VariableParser {
 		return retString;
 	}
 
-	/*
-	 * private List<String> addClean(ICompilationUnit unit, String repString){
-	 * String meth = }
-	 */
-
 	private List<String> addMethod(ICompilationUnit unit, String repString) {
 		String methString = "public class SO { \n public void run(){ \n "
 				+ repString + " \n } \n }";
@@ -232,17 +236,13 @@ public class VariableParser {
 
 	private List<String> printParsed(ICompilationUnit unit, String addString) {
 		addString = this.getImports(unit) + '\n' + addString;
-		// CompilationUnit ast = this.createCU(addString);
 		StringBuffer buf = new StringBuffer(addString);
 		CompilationUnit ast = EclipseUtil.compile(unit, unit.getJavaProject(),
 				buf.toString().toCharArray(), 0);
-		// unit.
-		System.out.print(ast.toString());
-		//ast.
-		// this.test(ast);
-		// this.createCU(addString);
-		this.getMethods(ast);
-		return this.parseCU_SO(ast);
+		//System.out.print(ast.toString());
+
+		return this.getMethods(ast);
+		//return this.parseCU_SO(ast);
 	}
 
 	private String getImports(ICompilationUnit unit) {

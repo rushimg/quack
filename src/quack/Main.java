@@ -187,7 +187,7 @@ public class Main {
              VariableParser varPar = new VariableParser();
              List<String> originalVars = varPar.runParser(unit,ast);
              varPar.printList(originalVars);
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
              
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
@@ -203,16 +203,16 @@ public class Main {
                              .getProject(), replacementString, quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
-                
-                    StringBuffer buf2 = new StringBuffer(doc.get());
+                 	soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
+                 	/*StringBuffer buf2 = new StringBuffer(doc.get());
                     buf2.replace(quackOffset, (quackOffset+replacementString.length()-1), replacementString);
                     CompilationUnit ast2 = EclipseUtil.compile(unit, unit
                             .getJavaProject(), buf2.toString().toCharArray(), 0);
                    // System.out.println(ast2);
-                    varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
+                    
                    
                    // Type Parser using walker
-                   /* Model model2 = modelCache.getModel(unit, ast2);
+                    Model model2 = modelCache.getModel(unit, ast2);
                     model2.processTypesForAST(ast2);
                     Bag<String> functionCallCounts2 = new Bag();
                     EclipseUtil.countCallsToDifferentMethodsAndFields(ast2,
@@ -228,10 +228,10 @@ public class Main {
                     */
                     //varPar.printList(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
-             
-           // varPar.printListOFLists(soVects);
+            // method name, return type, parameters
+            varPar.printListOFLists(soVects);
              	
-             return list;
+            return list;
              
          } catch (Throwable e) {
              log("Main.java(at end)", e);
