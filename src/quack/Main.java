@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.StringBufferInputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +24,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.internal.corext.template.java.VarResolver;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.omg.CORBA.portable.InputStream;
@@ -185,32 +188,32 @@ public class Main {
                 // System.out.print(w.typesInfo);
          
              VariableParser varPar = new VariableParser();
-             List<String> originalVars = varPar.runParser(unit,ast);
-             varPar.printList(originalVars);
-             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+             Map<String, String> originalVars = varPar.runParser(unit,ast);
+             //System.out.print(originalVars);
              
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
              log("API Call URL: "+ url.toString());
              String raw_text = sof.httpGetSO(url);
              Vector<ResponseObj> rawResponses =  sof.processJSON(raw_text);
-             List<List<String>> soVects  = new Vector<List<String>>();
-             
-             for(int i=0; i< rawResponses.size(); i++){
+             List<Map<String, String>> soVects  = new Vector<Map<String,String>>();
+             VariableReplacer replace = new VariableReplacer();
+             for(Integer i=0; i< rawResponses.size(); i++){
             		String replacementString = rawResponses.get(i).getReplacementString();
             		
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
                              .getProject(), replacementString, quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
-                 	soVects.add(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
+                 	Map<String, String>  tempMap = varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
+                 	soVects.add(tempMap);
+                 	replace.alignVars(originalVars, tempMap);
+                 	///varPar.printList(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
                  	/*StringBuffer buf2 = new StringBuffer(doc.get());
                     buf2.replace(quackOffset, (quackOffset+replacementString.length()-1), replacementString);
                     CompilationUnit ast2 = EclipseUtil.compile(unit, unit
                             .getJavaProject(), buf2.toString().toCharArray(), 0);
                    // System.out.println(ast2);
-                    
-                   
                    // Type Parser using walker
                     Model model2 = modelCache.getModel(unit, ast2);
                     model2.processTypesForAST(ast2);
@@ -229,7 +232,8 @@ public class Main {
                     //varPar.printList(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
             // method name, return type, parameters
-            varPar.printListOFLists(soVects);
+           //System.out.print(soVects);
+             //varPar.printListOFLists(soVects);
              	
             return list;
              

@@ -1,8 +1,11 @@
 package quack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -23,20 +26,20 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.Document;
 
-
+import sun.reflect.LangReflectAccess;
 
 public class VariableParser {
-	protected List<String> originalVars;
+	protected Map<String, String> originalVars;
 	protected List<String> soVars;
-	protected List<String> soMethds;
-	protected static List<String> tempVars = new Vector<String>();
+	protected Map<String,String> soMethds;
+	protected static Map<String,String> tempVars = new HashMap<String, String>();
 	protected static List<String> tempVars2 = new Vector<String>();
-	protected static List<String> tempMethds = new Vector<String>();
+	protected static Map<String,String> tempMethds = new HashMap<String, String>();
 	
 	public VariableParser() {
-		this.originalVars = new Vector<String>();
+		this.originalVars = new HashMap<String, String>();
 		this.soVars = new Vector<String>();
-		this.soMethds = new Vector<String>();
+		this.soMethds = new HashMap<String, String>();
 	}
 
 	public void printList(List<String> vars) {
@@ -44,6 +47,14 @@ public class VariableParser {
 			System.out.println(e);
 		System.out.println();
 	}
+	
+	/*public void printMaps(Map<String,String> vars) {
+		vars.
+		for (String e : vars)
+			System.out.println(e);
+		System.out.println();
+	}*/
+
 
 	public void printListOFLists(List<List<String>> vars) {
 		for (List<String> e : vars)
@@ -71,15 +82,22 @@ public class VariableParser {
 
 			public boolean visit(VariableDeclarationFragment node) {
 				SimpleName name = node.getName();
+
 				this.names.add(name.getIdentifier());
 				/*VariableParser.tempVars.add("Declaration of '" + name
 						+ "' at line "
 						+ cu.getLineNumber(name.getStartPosition()));*/
 				
 				if (node.resolveBinding() != null) {
-					
-					VariableParser.tempVars.add(node.resolveBinding()
-							.toString());
+					//TODO: clean up, a little hacky here
+					String cleaned = node.resolveBinding().toString().replace(name.toString(),"");
+					cleaned = cleaned.replace("public", "");
+					cleaned= cleaned.replace("java.lang.", "");
+					cleaned= cleaned.replace(" ", "");
+					//cleaned.replaceAll java.LangReflectAc ", "");
+					//System.out.print(cleaned);
+					VariableParser.tempVars.put(name.toString(),cleaned);
+					//VariableParser.tempVars.add(node.resolveBinding().toString().);
 				}
 				return false; // do not continue to avoid usage info
 			}
@@ -94,11 +112,11 @@ public class VariableParser {
 			}*/
 
 		});
-
-		for (String e : VariableParser.tempVars)
-			this.originalVars.add(e);
+		this.originalVars.putAll(VariableParser.tempVars);
+		/*for (String e : VariableParser.tempVars)
+			this.originalVars.add(e);*/
 	}
-
+	
 	/*public void test(CompilationUnit unit) {
 		// unit.compile
 		ICompilationUnit compilationUnit = (ICompilationUnit) unit;
@@ -130,37 +148,41 @@ public class VariableParser {
 		}
 	}*/
 
-	public List<String> getMethods(CompilationUnit unit){
+	public Map<String,String> getMethods(CompilationUnit unit){
 		final CompilationUnit cu = unit;
 		cu.accept(new ASTVisitor() {
             public boolean visit(final MethodDeclaration node) {
             	//System.out.println("declaring method: " + node.getName());
-            	VariableParser.tempMethds.add(node.getName().toString());
+            	VariableParser.tempMethds.put("method",node.getName().toString());
             	//System.out.println("returns type: " + node.getReturnType2());
-            	VariableParser.tempMethds.add(node.getReturnType2().toString());
+            	VariableParser.tempMethds.put("return_type",node.getReturnType2().toString());
                 List<String> parameters = new ArrayList<String>();
+                Integer counter = 0;
                 for (Object parameter : node.parameters()) {
+                	
                     VariableDeclaration variableDeclaration = (VariableDeclaration) parameter;
                     String type = variableDeclaration.getStructuralProperty(SingleVariableDeclaration.TYPE_PROPERTY).
                             toString();
                     for (int i = 0; i < variableDeclaration.getExtraDimensions(); i++) {
                         type += "[]";
                     }
-                    VariableParser.tempMethds.add(type);
+                    VariableParser.tempMethds.put(counter.toString(),type);
+                    counter++;
                     //parameters.add(type);
                 }
                 //System.out.println("input params: " + parameters.toString());
             
                 return true;
             }});
-		List<String> retList = new Vector<String>();
-		for (String e : VariableParser.tempMethds) {
+		Map<String,String> retList = new HashMap<String,String>();
+		/*for (String e : VariableParser.tempMethds) {
 			retList.add(e);
-		}
-
-		for (int i = 0; i < VariableParser.tempMethds.size(); i++) {
+		}*/
+		retList.putAll(tempMethds);
+		tempMethds.clear();
+		/*for (int i = 0; i < VariableParser.tempMethds.size(); i++) {
 			VariableParser.tempMethds.remove(i--);
-		}
+		}*/
 
 		return retList;
 	}
@@ -181,7 +203,7 @@ public class VariableParser {
 					System.out.println(node.resolveBinding().get);
 				}*/
 				if (name.resolveBinding() != null) {
-					VariableParser.tempVars2.add(name.resolveBinding()
+					VariableParser.tempVars2.add(name.resolveTypeBinding()
 							.toString());
 				}
 
@@ -210,31 +232,31 @@ public class VariableParser {
 		return retList;
 	}
 
-	public List<String> runParser(ICompilationUnit unit, CompilationUnit ast) {
+	public Map<String,String> runParser(ICompilationUnit unit, CompilationUnit ast) {
 		this.parseCU(ast);
 		return this.originalVars;
 	}
 
-	public List<String> parseSO(ICompilationUnit unit, String repString) {
+	public Map<String,String> parseSO(ICompilationUnit unit, String repString) {
 		// this.parseMethods(repString);
-		List<String> retString = new Vector<String>();
+		Map<String,String> retString = new HashMap<String,String>();
 		retString = this.addClass(unit, repString);
 		//retString.addAll(this.addMethod(unit, repString)); // only accepting full methods for now
 		return retString;
 	}
 
-	private List<String> addMethod(ICompilationUnit unit, String repString) {
+	private Map<String,String> addMethod(ICompilationUnit unit, String repString) {
 		String methString = "public class SO { \n public void run(){ \n "
 				+ repString + " \n } \n }";
 		return this.printParsed(unit, methString);
 	}
 
-	private List<String> addClass(ICompilationUnit unit, String repString) {
+	private Map<String,String> addClass(ICompilationUnit unit, String repString) {
 		String classString = "public class SO { \n " + repString + " \n }";
 		return this.printParsed(unit, classString);
 	}
 
-	private List<String> printParsed(ICompilationUnit unit, String addString) {
+	private Map<String,String> printParsed(ICompilationUnit unit, String addString) {
 		addString = this.getImports(unit) + '\n' + addString;
 		StringBuffer buf = new StringBuffer(addString);
 		CompilationUnit ast = EclipseUtil.compile(unit, unit.getJavaProject(),
