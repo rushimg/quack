@@ -22,7 +22,8 @@ public class VariableReplacer {
 		if (replacementVars.get("method") != null){
 			match += replacementVars.get("method") + "(";
 			replacementVars.remove("method");
-			Integer numInputParams = replacementVars.size();// we know all the remaining keys are input vars
+			int numInputParams = replacementVars.size();// we know all the remaining keys are input vars
+			int replaced = 0;
 				for(int i = 0; i<numInputParams; i++){
 					for(String e : originalVars.keySet()){
 					//System.out.println(originalVars.get(i));
@@ -33,17 +34,23 @@ public class VariableReplacer {
 						match += e + ",";
 						replacementVars.remove(e);
 						i++;
+						replaced++;
 					}
-				
 			}
+
 		}
+		if (replaced == numInputParams){
 				match += ");";
+			 	match = match.replace(",)", ")");
+		}
+		else
+			match = "";
 		}
 		//hacky to get around last variable comma
-		match = match.replace(",)", ")");
-		if (match != "")
+		
+		//if (match != "")
 			//System.out.println(numInputParams);
-			System.out.print(match);
+			//System.out.print(match);
 		 
 		return match;
 	}
