@@ -89,11 +89,11 @@ public class VariableParser {
 						+ cu.getLineNumber(name.getStartPosition()));*/
 				
 				if (node.resolveBinding() != null) {
-					//TODO: clean up, a little hacky here
+					//TODO: clean up, a little hacky here, why dont i need these variable name simplificsations???
 					String cleaned = node.resolveBinding().toString().replace(name.toString(),"");
-					cleaned = cleaned.replace("public", "");
-					cleaned= cleaned.replace("java.lang.", "");
-					cleaned= cleaned.replace(" ", "");
+					//cleaned = cleaned.replace("public", "");
+					//cleaned= cleaned.replace("java.lang.", "");
+					//cleaned= cleaned.replace(" ", "");
 					//cleaned.replaceAll java.LangReflectAc ", "");
 					//System.out.print(cleaned);
 					VariableParser.tempVars.put(name.toString(),cleaned);
@@ -113,6 +113,7 @@ public class VariableParser {
 
 		});
 		this.originalVars.putAll(VariableParser.tempVars);
+		VariableParser.tempVars.clear();
 		/*for (String e : VariableParser.tempVars)
 			this.originalVars.add(e);*/
 	}

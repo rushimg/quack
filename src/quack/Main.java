@@ -157,7 +157,6 @@ public class Main {
              buf.replace(quackOffset, cursorOffset, standinExpression);
              CompilationUnit ast = EclipseUtil.compile(unit, unit
                      .getJavaProject(), buf.toString().toCharArray(), 0);
-             //System.out.print(ast.toString());
              
              //Model model = modelCache.getModel(unit, ast);
                //  model.processTypesForAST(ast);
@@ -185,11 +184,9 @@ public class Main {
                 // model.functionCallCounts = functionCallCounts;
                  Deslopper d = new Deslopper();
                  //Walker w = new Walker(ast, model, quackOffset, quackIdent, d);
-                // System.out.print(w.typesInfo);
          
              VariableParser varPar = new VariableParser();
              Map<String, String> originalVars = varPar.runParser(unit,ast);
-             //System.out.print(originalVars);
              
              SOFunctions sof = new SOFunctions();
              URL url = sof.createURL(quack);
@@ -198,6 +195,7 @@ public class Main {
              Vector<ResponseObj> rawResponses =  sof.processJSON(raw_text);
              List<Map<String, String>> soVects  = new Vector<Map<String,String>>();
              VariableReplacer replace = new VariableReplacer();
+             
              for(Integer i=0; i< rawResponses.size(); i++){
             		String replacementString = rawResponses.get(i).getReplacementString();
             		Map<String, String>  tempMap = varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
@@ -233,10 +231,6 @@ public class Main {
                     */
                     //varPar.printList(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
              }
-            // method name, return type, parameters
-           //System.out.print(soVects);
-             //varPar.printListOFLists(soVects);
-             	
             return list;
              
          } catch (Throwable e) {

@@ -36,8 +36,7 @@ public class TestVarParser {
 	@Test
 	public void testParseMethods() {
 		VariableParser varPar = new VariableParser();
-		//CompilationUnit unit = new 
-		//varPar.getMethods();
+		
 	}
 
 }
