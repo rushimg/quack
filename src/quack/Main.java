@@ -200,9 +200,11 @@ public class Main {
             		String replacementString = rawResponses.get(i).getReplacementString();
             		Map<String, String>  tempMap = varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
                  	soVects.add(tempMap);
-                 	String methodCall = replace.alignVars(originalVars, tempMap);
-                 	if (methodCall != null)
-                 			replacementString += ("\n" + methodCall);
+                 	Vector<String> methodCall = replace.alignVars(originalVars, tempMap);
+                 	if (methodCall.size() >  0 && methodCall.get(1) != null){
+                 		
+                 			replacementString += ("\n" + methodCall.get(1));
+                 	}
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
                              .getProject(), replacementString, quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import apple.laf.JRSUIConstants.Size;
@@ -18,10 +19,9 @@ public class VariableReplacer {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String alignVars(Map<String,String> originalVars, Map<String,String> replacementVars){
+	public Vector<String> alignVars(Map<String,String> originalVars, Map<String,String> replacementVars){
+		Vector<String> matches = new Vector<String>();
 		this.permuteList = new Vector<String>();
-		Vector<String> retList = new Vector<String>();
-		//permute("","0123");
 		String match = "";
 		if (replacementVars.get("return_type") != null){
 			match += replacementVars.get("return_type") + " temp = ";
@@ -29,14 +29,20 @@ public class VariableReplacer {
 		}
 		if (replacementVars.get("method") != null){
 			match += replacementVars.get("method") + "(";
+			
 			replacementVars.remove("method");
-			//this.runPermuter(originalVars);
+			Vector<Vector<String>> permutedLists = this.runPermuter(originalVars);
+			for(Vector<String> keycombos: permutedLists){
+			String match2 = "";
 			int numInputParams = replacementVars.size();// we know all the remaining keys are input vars
+			String[] vars = new String[numInputParams];
 			int replaced = 0;
 				for(int i = 0; i<numInputParams; i++){
-					for(String e : originalVars.keySet()){
+					for(String e : keycombos){
+						System.out.println(e);
 					if (originalVars.get(i) == replacementVars.get(e)){
-						match += e + ",";
+						System.out.println(replacementVars.get(e));
+						vars[i] = e;
 						replacementVars.remove(e);
 						i++;
 						replaced++;
@@ -45,30 +51,51 @@ public class VariableReplacer {
 
 		}
 		if (replaced == numInputParams){
-				match += ");";
-			 	match = match.replace(",)", ")");
+			
+			for(int j = 0; j<numInputParams; j++){
+				match2 += vars[j] + ",";				
+			}
+				
+				match2 += ");";
+				match2 = match2.replace(",)", ")");
+				match2 = match+match2;
 		}
 		else
-			match = null;
+			match2 = null;
+		
+		if (!matches.contains(match2))
+			matches.add(match2); //no duplicates
+			}
 		}
-		return match;
+		//System.out.println(matches);
+		return matches;
 	}
 	
-	public Vector<Map<String, String>> permuted(Map<String,String> originalVars){
-			Vector<Map<String, String>> permutedMap = new Vector<Map<String, String>>();
-			//Map<String,String> permutedMap = new HashMap<String, String>();
-			int size = originalVars.size();
-			Set<String> keyList = originalVars.keySet(); 
-			Set<String> permutedKeys = new HashSet<String>();
-			while(permutedKeys.size() != size*size-1){
-				Collections.shuffle((java.util.List<?>) keyList);
-				//permutedKeys.add(keyList);
-			}
-			return permutedMap;
-			
-	}
-	public Vector<Map<String, String>> runPermuter(Map<String,String> originalVars){
-		Vector<Map<String, String>> permutedMap = new Vector<Map<String, String>>();
+//	public Vector<Vector<String>> runPermuter(Map<String,String> originalVars){
+//		Vector<Vector<String>> permutedMap = new Vector<Vector<String>>();
+//		int size = originalVars.size();
+//		String permuteThis = "";
+//		for(Integer i = 0; i< size; i++){
+//			permuteThis += i.toString();
+//		}
+//		Set<String> e =  originalVars.keySet();
+//		String[] arr = new String[size];
+//		arr = e.toArray(arr);
+//		this.permute("",permuteThis);
+//		for (String s : this.permuteList){
+//			Vector<String> tempList = new Vector<String>();
+//			for(Integer j = 0; j < size; j++){
+//				Integer currentVal = Character.getNumericValue(s.charAt(j));
+//				tempList.add(currentVal.toString());
+//			}
+//			permutedMap.add(tempList);
+//		}
+//		
+//		return permutedMap;
+//	}
+//	
+	public Vector<Vector<String>> runPermuter(Map<String,String> originalVars){
+		Vector<Vector<String>> permutedMap = new Vector<Vector<String>>();
 		int size = originalVars.size();
 		String permuteThis = "";
 		for(Integer i = 0; i< size; i++){
@@ -79,18 +106,16 @@ public class VariableReplacer {
 		arr = e.toArray(arr);
 		this.permute("",permuteThis);
 		for (String s : this.permuteList){
-			Map<String, String> tempMap = new HashMap<String, String>();
+			Vector<String> tempList = new Vector<String>();
 			for(Integer j = 0; j < size; j++){
 				int currentVal = Character.getNumericValue(s.charAt(j));
 				String Key = arr[currentVal];
-				System.out.println(Key);
-				tempMap.put(Key, originalVars.get(Key));
+				tempList.add(Key);
 			}
-			permutedMap.add(tempMap);
-			System.out.print(tempMap);
+			permutedMap.add(tempList);
 		}
 		
-		return null;
+		return permutedMap;
 	}
 	
 	
