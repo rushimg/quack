@@ -30,6 +30,7 @@ import org.eclipse.jface.text.IRegion;
 import org.omg.CORBA.portable.InputStream;
 
 import sun.misc.IOUtils;
+import apple.laf.JRSUIConstants.Size;
 
 import com.sun.tools.hat.internal.parser.Reader;
 import com.sun.tools.javac.code.Attribute.Array;
@@ -201,15 +202,23 @@ public class Main {
             		Map<String, String>  tempMap = varPar.parseSO(unit, rawResponses.get(i).getReplacementString());
                  	soVects.add(tempMap);
                  	Vector<String> methodCall = replace.alignVars(originalVars, tempMap);
-                 	if (methodCall.size() >  0 && methodCall.get(1) != null){
+                 	for(int k =0 ; k < methodCall.size(); k++){
+                 	replacementString = rawResponses.get(i).getReplacementString();
+                 	if (methodCall.get(k) != null){
                  		
-                 			replacementString += ("\n" + methodCall.get(1));
-                 	}
+                 			replacementString += ("\n" + methodCall.get(k));
+                 	
                  	list.add(new SOCompletionProposal(unit.getJavaProject()
                              .getProject(), replacementString, quackOffset, quack.length(),
                              rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
                              null, null, 1000000 - i));
-                 	
+                 	}
+             		}
+                 	replacementString = rawResponses.get(i).getReplacementString();
+                 	list.add(new SOCompletionProposal(unit.getJavaProject()
+                            .getProject(), replacementString, quackOffset, quack.length(),
+                            rawResponses.get(i).getDisplayString().length(), null, rawResponses.get(i).getDisplayString() + " [from SO_Quack]",
+                            null, null, 1000000 - i));
                  	///varPar.printList(varPar.parseSO(unit, rawResponses.get(i).getReplacementString()));
                  	/*StringBuffer buf2 = new StringBuffer(doc.get());
                     buf2.replace(quackOffset, (quackOffset+replacementString.length()-1), replacementString);

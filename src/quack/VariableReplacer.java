@@ -39,9 +39,9 @@ public class VariableReplacer {
 			int replaced = 0;
 				for(int i = 0; i<numInputParams; i++){
 					for(String e : keycombos){
-						System.out.println(e);
+						//System.out.println(e);
 					if (originalVars.get(i) == replacementVars.get(e)){
-						System.out.println(replacementVars.get(e));
+						//System.out.println(replacementVars.get(e));
 						vars[i] = e;
 						replacementVars.remove(e);
 						i++;

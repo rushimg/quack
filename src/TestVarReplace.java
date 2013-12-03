@@ -204,5 +204,4 @@ public class TestVarReplace {
 		 assertEquals(6, replaced3.size());
 		 
 	}
-
 }
