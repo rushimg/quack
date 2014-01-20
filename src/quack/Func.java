@@ -14,7 +14,7 @@ public class Func {
     public String name;
 
     public Ident ident;
-
+ 
     public Type returnType;
 
     public Vector<Type> params;
